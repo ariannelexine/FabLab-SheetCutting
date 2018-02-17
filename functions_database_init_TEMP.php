@@ -54,11 +54,11 @@ function initSheetTable_TEMP($connection) {
 		`indices` VARCHAR(20000) NOT NULL
 	)');
 	$values_array = array(
-		'(0, "0,1,2")',
-		'(1, "4,5,6")',
-		'(2, "7,8,9")',
-		'(3, "10,11,12")',
-		'(4, "13,14,15")',
+		'(0, "0,1,2,3,4,5,6,7")',
+		'(1, "8,9,10,11,12,13,14,15")',
+		'(2, "16,17,18,19,20,21,22,23")',
+		'(3, "24,25,26,27,28,29,30,31")',
+		'(4, "32,33,34,35,36,37,38,39")',
 	);
 	addMultipleRecordsIntoTable($connection, 'SheetInventory', '(`sheetinv_id`, `indices`)', $values_array);
 	
@@ -66,33 +66,58 @@ function initSheetTable_TEMP($connection) {
 	makeNewTable($connection, 'SheetInventoryEntry', '(
 		`index` INT PRIMARY KEY, 
 		`cutlistentry_index` INT,
-		`count` SMALLINT
+		`count` MEDIUMINT UNSIGNED
 	)');
 	$values_array = array(
 		// Inventory for clear glass
 		'(0, 0, 5)',
 		'(1, 1, 1)',
 		'(2, 2, 2)',
+		'(3, 3, 2)',
+		'(4, 4, 4)',
+		'(5, 5, 2)',
+		'(6, 6, 1)',
+		'(7, 7, 0)',
 		
 		// Inventory for red glass
-		'(3, 0, 5)',
-		'(4, 1, 0)',
-		'(5, 2, 0)',
+		'(8, 0, 4)',
+		'(9, 1, 2)',
+		'(10, 2, 4)',
+		'(11, 3, 2)',
+		'(12, 4, 1)',
+		'(13, 5, 1)',
+		'(14, 6, 1)',
+		'(15, 7, 2)',
 		
 		// Inventory for green glass
-		'(6, 0, 5)',
-		'(7, 1, 0)',
-		'(8, 2, 0)',
+		'(16, 0, 5)',
+		'(17, 1, 2)',
+		'(18, 2, 2)',
+		'(19, 3, 3)',
+		'(20, 4, 0)',
+		'(21, 5, 2)',
+		'(22, 6, 3)',
+		'(23, 7, 4)',
 		
 		// Inventory for blue glass
-		'(9, 0, 5)',
-		'(10, 1, 0)',
-		'(11, 2, 0)',
+		'(24, 0, 1)',
+		'(25, 1, 0)',
+		'(26, 2, 0)',
+		'(27, 3, 2)',
+		'(28, 4, 4)',
+		'(29, 5, 6)',
+		'(30, 6, 2)',
+		'(31, 7, 4)',
 		
 		// Inventory for yellow glass
-		'(12, 0, 5)',
-		'(13, 1, 0)',
-		'(14, 2, 0)'
+		'(32, 0, 8)',
+		'(33, 1, 0)',
+		'(34, 2, 0)',
+		'(35, 3, 0)',
+		'(36, 4, 0)',
+		'(37, 5, 0)',
+		'(38, 6, 0)',
+		'(39, 7, 0)'
 	);
 	addMultipleRecordsIntoTable($connection, 'SheetInventoryEntry', '(`index`, `cutlistentry_index`, `count`)', $values_array);
 	
@@ -102,7 +127,7 @@ function initSheetTable_TEMP($connection) {
 		`indices` VARCHAR(20000) NOT NULL
 	)');
 	$values_array = array(
-		'(0, "0,1,2")'
+		'(0, "0,1,2,3,4,5,6,7")'
 	);
 	addMultipleRecordsIntoTable($connection, 'CutList', '(`cutlist_id`, `indices`)', $values_array);
 	
@@ -114,9 +139,14 @@ function initSheetTable_TEMP($connection) {
 		`cost` DECIMAL
 	)');
 	$values_array = array(
-		'(0, 35, 20, 100.0)',
-		'(1, 20, 20, 80.0)',
-		'(2, 5, 5, 20.0)'
+		'(0, 35, 20, 50.0)',
+		'(1, 20, 20, 40.0)',
+		'(2, 20, 15, 35.0)',
+		'(3, 20, 10, 30.0)',
+		'(4, 10, 15, 25.0)',
+		'(5, 10, 10, 20.0)',
+		'(6, 10, 5, 15.0)',
+		'(7, 5, 5, 10.0)'
 	);
 	addMultipleRecordsIntoTable($connection, 'CutListEntry', '(`index`, `width`, `height`, `cost`)', $values_array);
 	

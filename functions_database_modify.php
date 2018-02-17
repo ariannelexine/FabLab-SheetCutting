@@ -93,7 +93,6 @@ function echoTable($connection, $table_name){
 	}
 	echo '</tr>';
 	
-
 	$sql = 'SELECT * from ' . $table_name;
 	$result = mysqli_query($connection, $sql);
 	$num_rows = mysqli_num_rows($result);

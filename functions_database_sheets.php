@@ -1,52 +1,40 @@
 <?php
-
-function getVariantNamesOfSheet($connection, $sheet_id) {
-	$sql = 'SELECT variants_id from Sheets WHERE sheet_id = ' . $sheet_id;
+function getSheetFromMaterialNameAsAnObject($connection, $material_name){
+	$sql = 'SELECT * from Sheets WHERE `description` = \'' . $material_name . '\' LIMIT 1';
 	$result = mysqli_query($connection, $sql);
-	$num_rows = mysqli_num_rows($result);
-	$values = array();
-	if($num_rows > 0) {
-		while($row = $result->fetch_assoc()){
-			$sql = 'SELECT indices from Variants';
-			$result2 = mysqli_query($connection, $sql);
-			$num_rows2 = mysqli_num_rows($result2);
-			if($num_rows2 > 0) {
-				while($row2 = $result2->fetch_assoc()){
-					$variant_indices = explode(',', $row2['indices']);
-					foreach($variant_indices as $variant_index) {
-						$sql = 'SELECT name from Variant WHERE variant_id = ' . $variant_index;
-						$result3 = mysqli_query($connection, $sql);
-						$num_rows3 = mysqli_num_rows($result3);
-						if($num_rows3 > 0) {
-							while($row3 = $result3->fetch_assoc()){
-								array_push($values, $row3['variant_id'].','.$row3['name'].','.$row3['sheetinv_id']);
-							}
-						}
-					}
-				}
-			}
-		}
-	}
-	return $values;
+	return mysqli_fetch_object($result);
 }
 
-function getSheetInventoryIDFromVariant($connection, $material_name, $variant_name) {
-	$sql = 'SELECT variants_id from Sheets WHERE description= ' . $material_name;
-	
+function getVariantsOfSheetAsAn2DArray($connection, $variants_id) {
+	$cutlist = array();
+	$sql = 'SELECT indices from Variants WHERE `variants_id` = ' . $variants_id . ' LIMIT 1';
 	$result = mysqli_query($connection, $sql);
-	$num_rows = mysqli_num_rows($result);
-	$values = array();
-	if($num_rows > 0) {
-		$row = $result->fetch_assoc();
-		$sql = 'SELECT indices from Variants WHERE variants_id=' . $row['variants_id'];
-		$result = mysqli_query($connection, $sql);
-		$num_rows = mysqli_num_rows($result);
-		if($num_rows > 0)
-		{
-			$row = $result->fetch_assoc();
-		}
-	}
-	return $values;
+	$sql = 'SELECT * from Variant WHERE `variant_id` IN (' . $result->fetch_assoc()['indices'] . ')';
+	$result_entries = mysqli_query($connection, $sql);
+	return mysqli_fetch_all($result_entries);
+}
+
+function getCutListEntriesAsAn2DArray($connection, $cutlist_id){
+	$cutlist = array();
+	$sql = 'SELECT indices from CutList WHERE `cutlist_id` = ' . $cutlist_id . ' LIMIT 1';
+	$result = mysqli_query($connection, $sql);
+	$sql = 'SELECT * from CutListEntry WHERE `index` IN (' . $result->fetch_assoc()['indices'] . ')';
+	$result_entries = mysqli_query($connection, $sql);
+	return mysqli_fetch_all($result_entries);
+}
+
+function getSheetVariantInventoryIndicesAsAnArrayString($connection, $sheetinv_id) {
+	$sql = 'SELECT indices from SheetInventory WHERE `sheetinv_id` = ' . $sheetinv_id . ' LIMIT 1';
+	$result = mysqli_query($connection, $sql);
+	return $result->fetch_assoc()['indices'];
+}
+
+function getSheetVariantInventoryEntriesAsAn2DArray($connection, $sheetinv_id){
+	$cutlist = array();
+	$indices = getSheetVariantInventoryIndicesAsAnArrayString($connection, $sheetinv_id);
+	$sql = 'SELECT * from SheetInventoryEntry WHERE `index` IN (' . $indices . ')';
+	$result_entries = mysqli_query($connection, $sql);
+	return mysqli_fetch_all($result_entries);
 }
 
 ?>
