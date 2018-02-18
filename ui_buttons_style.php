@@ -1,5 +1,13 @@
 <?php
 echo '
+.left_panel {
+	float:left;
+	width:15%;
+	height:82%;
+	border-style:solid;
+	border-width:1px;
+	margin-right:2px;
+}
 .ui_button:link, .ui_button:visited {
 	background-color:#E0E0E0;
 	color: black;

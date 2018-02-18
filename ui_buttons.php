@@ -1,11 +1,10 @@
 <?php
-
+echo '<div class="left_panel">';
 // Sheet cutting buttons
 makeLabel('Sheet cutting');
-makeButton('Add new material', 'http://localhost/test/webpage_sheets_new_material.php');
+makeButton('Add new material', 'webpage_sheets_new_material.php');
 makeButton('Edit materials', '');
-makeButton('New order', '');
-makeButton('View inventory', 'http://localhost/test/webpage_sheets_view_inventory.php');
+makeButton('View inventory', 'webpage_sheets_view_inventory.php');
 
 // Kiln loading buttons
 makeLabel('Kiln loading');
@@ -14,8 +13,9 @@ makeButton('Get next load', '');
 
 // Debug buttons (Temporary; Remove this in the final version!)
 makeDebugLabel('Debug');
-makeDebugButton('View database tables', 'http://localhost/test/webpage_debug_view_tables.php');
-makeDebugButton('Reset database', 'http://localhost/test/webpage_debug_reset_database.php');
+makeDebugButton('View database tables', 'webpage_debug_view_tables.php');
+makeDebugButton('Reset database', 'webpage_debug_reset_database.php');
+echo '</div>';
 
 function makeLabel($text){
 	echo '<label class="ui_button_label">'.$text.'</label>';

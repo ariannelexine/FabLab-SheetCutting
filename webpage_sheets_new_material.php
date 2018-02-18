@@ -5,14 +5,6 @@ html, body {
 	height: 100%;
 	overflow: hidden;
 }
-.left_panel {
-	float:left;
-	width:15%;
-	height:80%;
-	border-style:solid;
-	border-width:1px;
-	margin-right:2px;
-}
 .right_panel {
 	float:left;
 	width:84%;
@@ -40,13 +32,12 @@ function callPHP(url, params) {
 }
 </script>
 <body>
-<div style="height:18%"> 
-	<?php include 'ui_titlebar.php' ?> 
-</div>
-<div class="left_panel">
-	<?php include 'ui_buttons.php' ?> 
-</div>
+
+<?php include 'ui_titlebar.php' ?> 
+<?php include 'ui_buttons.php' ?> 
+
 <div class="right_panel">
+<h2 id="sheet_inv_header" style="margin-top:0px;">Add new material</h2>
 
 <?php
 include 'functions_util.php';
@@ -65,8 +56,8 @@ if(isset($_SESSION['page'])){
 	$_SESSION['subpage'] = 0;
 }
 
-$_SESSION['test'] = 'Hello world!';
-echo '<input id="clickMe" type="button" value="clickme" onclick="callPHP(\'ajax_post_to_session.php\', \'{WHATWHAT}\');"/>';
+//$_SESSION['test'] = 'Hello world!';
+//echo '<input id="clickMe" type="button" value="clickme" onclick="callPHP(\'ajax_post_to_session.php\', \'{WHATWHAT}\');"/>';
 ?>
 </div>
 </body>

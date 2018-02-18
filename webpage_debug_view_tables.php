@@ -5,30 +5,21 @@ html, body {
 	height: 100%;
 	overflow: hidden;
 }
-.left_panel {
-	float:left;
-	width:15%;
-	height:80%;
-	border-style:solid;
-	border-width:1px;
-	margin-right:2px;
-}
 .right_panel {
 	float:left;
 	width:84%;
-	height:80%;
+	height:82%;
 	overflow:auto;
 	margin: 2px;
+
 }
 <?php include 'ui_buttons_style.php' ?> 
 </style>
 <body>
-<div style="height:18%"> 
-	<?php include 'ui_titlebar.php' ?> 
-</div>
-<div class="left_panel">
-	<?php include 'ui_buttons.php' ?> 
-</div>
+
+<?php include 'ui_titlebar.php' ?> 
+<?php include 'ui_buttons.php' ?> 
+
 <div class="right_panel">
 
 <?php
