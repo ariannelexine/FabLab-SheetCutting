@@ -18,6 +18,7 @@ html, body {
 	width:84%;
 	height:80%;
 	overflow:auto;
+	margin: 2px;
 }
 <?php include 'ui_buttons_style.php' ?> 
 </style>
@@ -29,9 +30,9 @@ html, body {
 	<?php include 'ui_buttons.php' ?> 
 </div>
 <div class="right_panel">
+
 <?php
 include 'functions_database_init_TEMP.php';
-include 'class_CutList.php';
 
 $server = 'localhost';
 $user = 'root';
@@ -43,7 +44,7 @@ if ($connection->connect_error) {
 	exit('Connection failed: ' . $connection->connect_error);
 }
 
-initDatabase($connection);
+viewSheetTables($connection);
 
 $connection->close();
 ?>

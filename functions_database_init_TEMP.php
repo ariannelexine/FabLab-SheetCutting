@@ -1,8 +1,18 @@
 <?php
 include 'functions_database_modify.php';
 
-function initSheetTable_TEMP($connection) {
-	// Delete tables if they already exist.
+function viewSheetTables($connection) {
+	// Draw tables to webpage
+	echoTable($connection, 'Sheets');
+	echoTable($connection, 'Variants');
+	echoTable($connection, 'Variant');
+	echoTable($connection, 'SheetInventory');
+	echoTable($connection, 'SheetInventoryEntry');
+	echoTable($connection, 'CutList');
+	echoTable($connection, 'CutListEntry');
+}
+
+function resetDatabase($connection) {
 	deleteTable($connection, 'Sheets');
 	deleteTable($connection, 'Variants');
 	deleteTable($connection, 'Variant');
@@ -10,7 +20,10 @@ function initSheetTable_TEMP($connection) {
 	deleteTable($connection, 'SheetInventoryEntry');
 	deleteTable($connection, 'CutList');
 	deleteTable($connection, 'CutListEntry');
-	
+	initDatabase($connection);
+}
+
+function initDatabase($connection) {
 	// Create Sheets table
 	makeNewTable($connection, 'Sheets', '(
 		`sheet_id` SMALLINT PRIMARY KEY, 
@@ -149,15 +162,6 @@ function initSheetTable_TEMP($connection) {
 		'(7, 5, 5, 10.0)'
 	);
 	addMultipleRecordsIntoTable($connection, 'CutListEntry', '(`index`, `width`, `height`, `cost`)', $values_array);
-	
-	// Draw tables to webpage
-	echoTable($connection, 'Sheets');
-	echoTable($connection, 'Variants');
-	echoTable($connection, 'Variant');
-	echoTable($connection, 'SheetInventory');
-	echoTable($connection, 'SheetInventoryEntry');
-	echoTable($connection, 'CutList');
-	echoTable($connection, 'CutListEntry');
 }
 
 ?>

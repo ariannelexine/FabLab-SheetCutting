@@ -85,8 +85,8 @@ function echoTable($connection, $table_name){
 		return;
 	}
 	
-	echo '<table style="width:100%" border="1px solid black"><tr><th>' . $table_name . '</th></tr></table>';
-	echo '<table style="width:100%" border="1px solid black">';
+	echo '<table style="width:100%; background-color:#EEEEEE" border="1px solid black"><tr><th>' . $table_name . '</th></tr></table>';
+	echo '<table style="width:100%; background-color:#EEEEEE" border="1px solid black">';
 	echo '<tr>';
 	foreach($column_names as $column_name){
 		echo '<th>' . $column_name . '</th>';

@@ -1,5 +1,6 @@
 <?php
-echo '.ui_button:link, .ui_button:visited {
+echo '
+.ui_button:link, .ui_button:visited {
 	background-color:#E0E0E0;
 	color: black;
 	text-align: center;
@@ -11,6 +12,9 @@ echo '.ui_button:link, .ui_button:visited {
 	border-width:1px;
 	border-color: white;
 	margin-bottom: -1px;
+}
+.ui_button_current:link,.ui_button_current:visited {
+	background-color:#C0C0D0;
 }
 .ui_button:hover {
 	background-color:#C0C0C0;
@@ -29,6 +33,7 @@ echo '.ui_button:link, .ui_button:visited {
 	border-color: white;
 	margin-bottom: -1px;
 }
+
 .ui_button_label::selection {
 	background-color:transparent;
 }
@@ -73,6 +78,26 @@ echo '.ui_button:link, .ui_button:visited {
 }
 .ui_close_button:active {
 	background-color:#983838;
+}
+
+
+.ui_label_debug {
+	background-color:#B89090;
+}
+
+.ui_debug_button_current:link,.ui_debug_button_current:visited {
+	background-color:#E08080;
+}
+.ui_debug_button:link, .ui_debug_button:visited {
+	background-color:#E0A0A0;
+	border-style:solid;
+	border-width:1px;
+}
+.ui_debug_button:hover {
+	background-color:#C08080;
+}
+.ui_debug_button:active {
+	background-color:#985858;
 }
 '
 
