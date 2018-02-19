@@ -2,9 +2,9 @@
 echo '<div class="left_panel">';
 // Sheet cutting buttons
 makeLabel('Sheet cutting');
+makeButton('View inventory', 'webpage_sheets_view_inventory.php');
 makeButton('Add new material', 'webpage_sheets_new_material.php');
 makeButton('Edit materials', '');
-makeButton('View inventory', 'webpage_sheets_view_inventory.php');
 
 // Kiln loading buttons
 makeLabel('Kiln loading');
@@ -24,6 +24,10 @@ function makeLabel($text){
 function makeButton($text, $page_address){
 	$current_page = basename($_SERVER['PHP_SELF']);
 	
+	if($page_address === '') {
+		$text .= '<p style="color:#AA0000;line-height:0px;margin-top:0px;">(Not implemented)</p>';
+	}
+	
 	if($current_page !== basename($page_address)) {
 		echo '<a href="' . $page_address . '" class="ui_button">' . $text . '</a>';
 	} else {
@@ -37,6 +41,10 @@ function makeDebugLabel($text){
 
 function makeDebugButton($text, $page_address){
 	$current_page = basename($_SERVER['PHP_SELF']);
+	
+	if($page_address === '') {
+		$text .= '<p style="color:#AA0000;line-height:0px;margin-top:0px;">(Not implemented)</p>';
+	}
 	
 	if($current_page !== basename($page_address)) {
 		echo '<a href="' . $page_address . '" class="ui_button ui_debug_button">' . $text . '</a>';

@@ -3,6 +3,7 @@ echo '
 .left_panel {
 	float:left;
 	width:15%;
+	min-width:200px;
 	height:82%;
 	border-style:solid;
 	border-width:1px;
