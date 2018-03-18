@@ -69,7 +69,7 @@ function updateCutListRadioState() {
 	<div>
 		<b style="font-size:20px;">Cut list:</b>
 		<br/>
-		<form>
+		<form style="margin-bottom:0px;">
 			<input name="cutlist" type="radio" id="radio_option_new" checked="true" onchange="updateCutListRadioState()"/>
 			<label>Make a new cut list</label>
 			<input name="cutlist" type="radio" id="radio_option_use_old" onchange="updateCutListRadioState()"/>
@@ -79,6 +79,9 @@ function updateCutListRadioState() {
 				updateCutListRadioState();
 			</script>
 		</form>
+	</div>
+	<div>
+		<a id="send_button" href="" id="save_button" class="ui_button ui_save_button" style="width:15%;margin-top:16px;">Add new material</a>
 	</div>
 </div>
 </body>

@@ -45,11 +45,8 @@ function resetDatabase() {
 <?php include 'ui_buttons.php' ?> 
 
 <div class="right_panel">
-
-<?php
-echo '<h1 id="reset_header">Reset the database?</h1>';
-echo '<a id="reset_button" href="javascript:resetDatabase()" id="save_button" class="ui_button ui_close_button" style="width:24%;margin-top:8px;">Yes, reset everything.</a>';
-?>
+<h1 id="reset_header">Reset the database?</h1>
+<a id="reset_button" href="javascript:resetDatabase()" id="save_button" class="ui_button ui_close_button" style="width:24%;margin-top:8px;">Yes, reset everything.</a>
 </div>
 </body>
 </html>
