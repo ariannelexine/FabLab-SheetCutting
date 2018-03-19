@@ -97,6 +97,9 @@ include_once ($_SERVER['DOCUMENT_ROOT'].'/pages/header.php');
 	var AddMaterial = function() {
 		window.history.back();
 	}
+	var Cancel = function() {
+		window.history.back();
+	}
 </script>
 
 <?php
