@@ -1,30 +1,35 @@
-use sheet_cutting;
+use `fabapp-v0.9`;
 
-CREATE TABLE SHEETS (
-  variant_id INT REFERENCES VARIANTS(variant_id),
-  size INT REFERENCES CUT_SIZES(cut_id),
-  PRIMARY KEY(variant_id, size)
+CREATE TABLE sheet_type (
+  type_id INT PRIMARY KEY AUTO_INCREMENT,
+  type VARCHAR(30)
 );
 
-CREATE TABLE VARIANTS (
-  variant_id INT PRIMARY KEY,
-  sheet_type VARCHAR(15),
+CREATE TABLE variants (
+  variant_id VARCHAR(10) PRIMARY KEY,
   description VARCHAR(15),
-  name VARCHAR(30)
+  name VARCHAR(30),
+  colorhex VARCHAR(6),
+  type_id INT REFERENCES sheet_type(type_id)
 );
 
-CREATE TABLE CUT_SIZES (
+-- Auto increment? 
+CREATE TABLE cut_sizes (
   cut_id INT PRIMARY KEY,
+  width INT,  
   height INT,
-  width INT, 
   price DECIMAL,
-  parent_id INT REFERENCES CUT_SIZES(cut_id)
+  child_id INT REFERENCES CUT_SIZES(cut_id),
+  amount INT,
+  type_id INT REFERENCES sheet_type(type_id)
 );
 
-CREATE TABLE SHEET_INVENTORY (
-  obj_id INT PRIMARY KEY,
+CREATE TABLE sheet_inventory (
+  obj_id INT PRIMARY KEY AUTO_INCREMENT,
+  trans_id INT,
   variant_id INT,
-  size INT,
-  FOREIGN KEY (variant_id, size) REFERENCES SHEETS(variant_id, size)
+  cut_id INT,
+  staff_id VARCHAR(10),
+  removed_date datetime
 );
 
