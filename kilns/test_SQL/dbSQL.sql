@@ -40,3 +40,9 @@ WHERE variant_id = '0025' AND cut_id = 1);
 UPDATE sheet_inventory 
 SET staff_id = '000', removed_date = CURRENT_TIMESTAMP
 WHERE obj_id = 2; 
+
+-- Get parent of cut_size 10 x 10 
+SELECT cut_id FROM cut_sizes WHERE width = 10 AND height = 10; -- returns 6
+
+SELECT * FROM cut_sizes WHERE cut_id IN
+(SELECT parent_id FROM cutsize_children WHERE child_id = 6);
