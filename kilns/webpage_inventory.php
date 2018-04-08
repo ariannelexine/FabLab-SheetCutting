@@ -27,23 +27,36 @@ include_once ($_SERVER['DOCUMENT_ROOT'].'/pages/header.php');
 						<thead>
 							<tr class="tablerow">
 								<th>Material</td>
+								<th>ID</td>
 								<th>Size</th>
 								<th>Price</th>
 								<th>In Stock</th>
 							</tr>
 						</thead>
 						 <?php if ($result = $mysqli->query("
-                            SELECT DISTINCT sheet_type, description, name, height, width, price, count(obj_id) as 'In Stock'
-							FROM SHEETS h 
-							INNER JOIN VARIANTS v on h.variant_id = v.variant_id
-							INNER JOIN CUT_SIZES c on h.size = c.cut_id
-							LEFT JOIN SHEET_INVENTORY s on s.variant_id = h.variant_id and s.size = h.size
-							GROUP BY h.variant_id, h.size;
+                            SELECT DISTINCT type, v.variant_id, v.colorhex, name, width, height, price, count(obj_id) as 'In Stock'
+							FROM sheet_type s
+							LEFT JOIN cut_sizes as c ON s.type_id = c.type_id
+							LEFT JOIN variants as v ON s.type_id = v.type_id
+							LEFT JOIN sheet_inventory as i ON i.variant_id = v.variant_id AND i.cut_id = c.cut_id
+							WHERE i.removed_date IS NULL
+							GROUP BY name, width, height;
                         ")){
                             while ( $row = $result->fetch_assoc() ){ ?>
                                 <tr class="tablerow">
 									<td>
-										<?php echo $row["sheet_type"] . ' (' . $row["name"] . ')'?></td>
+										<span style="float:left;margin-right:6px;">
+											<?php 
+												echo ' ' . $row["type"]; 
+												if($row["name"] != NULL) {
+													echo ' (' . $row["name"] . ')';
+												}
+											?>
+										</span>
+										<div class="color-box" style="float:right;background-color: #<?php echo $row['colorhex'];?>;"/>
+									</td>
+									<td>
+										<?php echo $row["variant_id"]?></td>
 									</td>
 									<td>
 										<?php echo $row["width"] . 'x' . $row["height"];?></td>

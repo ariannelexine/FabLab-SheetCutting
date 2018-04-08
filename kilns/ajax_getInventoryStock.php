@@ -8,17 +8,16 @@ if ($connection->connect_error) {
 	exit('Connection failed: ' . $connection->connect_error);
 }
 
-$sql = "SELECT DISTINCT sheet_type, description, name, height, width, price, count(obj_id) as 'In Stock'
-FROM SHEETS h 
-INNER JOIN VARIANTS v on h.variant_id = v.variant_id
-INNER JOIN CUT_SIZES c on h.size = c.cut_id
-LEFT JOIN SHEET_INVENTORY s on s.variant_id = h.variant_id and s.size = h.size
-WHERE sheet_type = '".$_POST["sheet_type"]."' AND name = '".$_POST["name"]."' AND height = '".$_POST["height"]."' AND width = '".$_POST["width"]."';";
+$sql = "SELECT DISTINCT type, v.variant_id, v.colorhex, name, width, height, price, count(obj_id) as 'In Stock'
+FROM sheet_type s
+LEFT JOIN cut_sizes as c ON s.type_id = c.type_id
+LEFT JOIN variants as v ON s.type_id = v.type_id
+LEFT JOIN sheet_inventory as i ON i.variant_id = v.variant_id AND i.cut_id = c.cut_id
+WHERE i.removed_date IS NULL AND name = '".$_POST["name"]."' AND height = '".$_POST["height"]."' AND width = '".$_POST["width"]."';";
 
 if ($result = $connection->query($sql)) {
 	while ($row = $result->fetch_assoc() ){
-		//print_r($row);
-		echo $row['In Stock'] . ', price = $' . $row['price'];
+		echo $row['In Stock'] . ',' . $row['price'];
 	}
 }
 

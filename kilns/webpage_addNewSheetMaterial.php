@@ -28,8 +28,6 @@ include_once ($_SERVER['DOCUMENT_ROOT'].'/pages/header.php');
 								<td>
 									<b>Material Name:</b> 
 									<input style="margin-left:4px;" value="" name="field1" id="field1" tabindex="1" />
-									<input style="margin-left:10px;" type="checkbox" name="cb1" id="cb1" tabindex="2" />
-									Only adding new variants or cut sizes to existing material
 								</td>
 							</tr>
 							<tr id="Variant1" style="height:100px">
@@ -60,7 +58,7 @@ include_once ($_SERVER['DOCUMENT_ROOT'].'/pages/header.php');
 	var lastVariantID = 1;
 	
 	var AddVariant = function() {
-		var tableRow = document.createElement("tr"); // create table row
+		var tableRow = document.createElement("tr");
 		tableRow.id = "Variant" + (++lastVariantID);
 		tableRow.style = "height:100px;";
 		var tableEntry = document.createElement("td");
