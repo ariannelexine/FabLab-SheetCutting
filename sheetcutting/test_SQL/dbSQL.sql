@@ -53,10 +53,14 @@ FROM sheet_type s
 LEFT JOIN cut_sizes as c ON s.type_id = c.type_id
 LEFT JOIN variants as v ON s.type_id = v.type_id
 LEFT JOIN sheet_inventory as i ON i.variant_id = v.variant_id AND i.cut_id = c.cut_id
-WHERE i.removed_date IS NULL AND v.variant_id = '1128'
+WHERE i.removed_date IS NULL AND v.variant_id = '1128' AND c.cut_id IN
+(SELECT parent_id FROM cutsize_children WHERE child_id = 6)
 GROUP BY name, width, height;
 
-
+use `fabapp-v0.9`;
+SELECT * 
+FROM cutsize_children 
+WHERE parent_id = 6;
 /* type
 variant
 count

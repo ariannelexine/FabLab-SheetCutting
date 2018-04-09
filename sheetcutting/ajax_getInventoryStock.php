@@ -1,7 +1,7 @@
 <?php
 $server = 'localhost';
-$user = 'root';
-$password = '';
+$user = 'Fablabian';
+$password = 'sbVaBEd3eW9dxmdb';
 $database = 'fabapp-v0.9';
 $connection = mysqli_connect($server, $user, $password, $database);
 if ($connection->connect_error) {

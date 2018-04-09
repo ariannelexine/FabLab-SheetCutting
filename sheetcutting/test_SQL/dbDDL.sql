@@ -15,8 +15,8 @@ CREATE TABLE variants (
 
 CREATE TABLE cut_sizes (
   cut_id INT PRIMARY KEY AUTO_INCREMENT,
-  width INT,  
-  height INT,
+  width INT NOT NULL,  
+  height INT NOT NULL,
   price DECIMAL,
   type_id INT REFERENCES sheet_type(type_id)
 );
