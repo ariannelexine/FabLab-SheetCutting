@@ -37,13 +37,13 @@ include_once ($_SERVER['DOCUMENT_ROOT'].'/pages/header.php');
 							</tr>
 							<tr id="addSize">
 								<td>
-									<button onclick="AddSize()" class="btn btn-warning btn-md">Add Cut Sizes</button>
+									<button onclick="AddSize()" class="btn btn-info btn-md">Add Cut Sizes</button>
 								</td>
 							</tr>
 							<tr id="buttons">
 								<td>
-									<button onclick="AddMaterial()" class="btn btn-success btn-md">Add Material</button>
-									<button onclick="Cancel();" class="btn btn-danger btn-md">Cancel</button>
+									<button onclick="Cancel();" class="btn btn-danger btn-md pull-right">Cancel</button>
+									<button onclick="AddMaterial()" class="btn btn-success btn-md pull-right" style="margin-right:8px;">Add Material</button>
 								</td>
 							</tr>
 						</tbody>

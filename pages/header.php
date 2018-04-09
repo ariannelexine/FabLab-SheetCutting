@@ -201,19 +201,13 @@ if (isset($_SESSION['success_msg']) && $_SESSION['success_msg']!= ""){
                                     <a href="/sheetcutting/webpage_cutSheet.php"><i class="fas fa-cut"></i> Make a cut</a>
                                 </li>
                                 <li>
-                                    <a href="#"><i class="fas fa-truck"></i> Receive Inventory </a>
+                                    <a href="/sheetcutting/webpage_addNewInventory.php"><i class="fas fa-truck"></i> New Inventory </a>
                                 </li>
                                 <li>
                                     <a href="/sheetcutting/webpage_addNewSheetMaterial.php"><i class="fas fa-life-ring"></i> Manage Materials</a>
                                 </li>
                             </ul>
-                        </li>
-						<li>
-                            <a href="#"><i class="fas fa-fire"></i> Kiln Loading<span class="fas fa-angle-left"></span></a>
-							<ul class="nav nav-second-level">
-                            </ul>
-                        </li>
-						
+                        </li>	
                         <li>
                             <a href="#"><i class="fas fa-gift"></i> Pick Up 3D Print<span class="fas fa-angle-left"></span></a>
                             <ul class="nav nav-second-level">
