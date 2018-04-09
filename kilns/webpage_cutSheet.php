@@ -45,7 +45,9 @@ include_once ($_SERVER['DOCUMENT_ROOT'].'/pages/header.php');
 						} ?>
 					</select>
 					<div id="sheetSellingElements" style="margin-top:10px;">
+					
 					</div>
+					
 				</div>
 			</div>
 		</div>
@@ -53,9 +55,11 @@ include_once ($_SERVER['DOCUMENT_ROOT'].'/pages/header.php');
 </div>
 
 <script type="text/javascript" charset="utf-8">
+
+
 function makeSheetSellingElements() {
 	var elements_div = document.getElementById('sheetSellingElements');
-	elements_div.innerHTML = '';
+	elements_div.innerHTML = ''; // clear sheetSellingElements element
 	
 	var variant_text = document.createElement("b");
 	variant_text.innerHTML = "Size:";
@@ -89,9 +93,12 @@ function makeSheetSellingElements() {
 }
 
 function updateStock() {
-	var elements_div = document.getElementById('sheetSellingElements');
 	var stock_and_price = document.getElementById('stock_and_price');
-	stock_and_price.innerHTML = "";
+	stock_and_price.innerHTML = ""; // clear stock_and_price element
+	var cut_info = document.getElementById('cut_info_table');
+	if(cut_info != undefined) {
+		cut_info.parentNode.removeChild(cut_info); // remove cut_info_table div if it already exists.
+	}
 	
 	var sheet_type = document.getElementById('sheet_type_list');
 	var name = document.getElementById('name_list');
@@ -108,11 +115,11 @@ function updateStock() {
 		var button_for_buy = document.createElement("div");
 		button_for_buy.id="button_for_buy";
 		stock_and_price.appendChild(button_for_buy);
-		makeSaleButton(split_response[0], split_response[1]);
+		makeSaleButton(split_response[0], split_response[1], split_response[2]);
 	});
 }
 
-function makeSaleButton(count, price) {
+function makeSaleButton(count, price, cut_id) {
 	var button_for_buy = document.getElementById('button_for_buy');
 	var buyButton = document.createElement("button");
 	buyButton.className = "btn btn-success btn-md";
@@ -128,19 +135,116 @@ function makeSaleButton(count, price) {
 		var size = document.getElementById('size_list').value.split("x");
 		var params = "name="+name_string+"&variant_id="+name_id+
 		"&sheet_type="+sheet_type.value+"&width="+size[1]+"&height="+size[0]+
-		"&count="+count+"&price="+price;
+		"&count="+count+"&price="+price+"&cut_id="+cut_id;
 		callPHP('ajax_getCuts.php', params, function(response){
-			//buyButton.innerHTML = "The sale has been made!";
-			//buyButton.className = "btn btn-info btn-md";
-			//setTimeout(function(){ makeSheetSellingElements(); }, 1000);
-			console.log(response);
+			buyButton.parentNode.removeChild(buyButton);
+			showCutTreeResults(response);
+			//console.log(response);
 		});
 	}
 	
 	button_for_buy.appendChild(buyButton);
 }
 
-// I'm not sure how jon wants us to call php functions, so this is just temporary.
+function getSheetByCutId(list, id){
+	for(var i = 0; i < list.length; i++){
+		if(list[i].cut_id == id) {
+			return list[i];
+		}
+	}
+	return undefined;
+}
+
+function showCutTreeResults(response) {
+	var data;
+	
+	try {
+        data = JSON.parse(response);
+    } catch (e) {
+		var elements_div = document.getElementById('sheetSellingElements');
+		var cut_info = document.createElement("div");
+		cut_info.id = "cut_info_table";
+		elements_div.innerHTML = "<b>Out of stock! No cuts can be made!</b><br/><br/>";
+	
+		var cancel = document.createElement("button");
+		cancel.className = "btn btn-danger btn-md";
+		cancel.style = "margin-left:8px;";
+		cancel.innerHTML = "Try another";
+		
+		cancel.onclick = function() {
+			makeSheetSellingElements();
+		}
+		
+		cut_info.appendChild(cancel);
+		elements_div.appendChild(cut_info);
+        return;
+    }
+	
+	
+	var list = data[0];
+	var cut_into = data[1];
+	
+	var elements_div = document.getElementById('sheetSellingElements');
+	var cut_info = document.createElement("div");
+	cut_info.id = "cut_info_table";
+	var table = document.createElement("table");
+	table.className = "table table-striped table-bordered table-hover";
+	var tbody = document.createElement("tbody");
+	var table_header = document.createElement("th");
+	
+	cut_info.appendChild(table);
+	table.appendChild(tbody);
+	tbody.appendChild(table_header);
+	
+	table_header.innerHTML = "<td>Make the following cuts:</td>";
+	
+	for(var i = list.length-1; i >= 0; i--) {
+		if(cut_into[i][0] != undefined) {
+			var split_cut_into = cut_into[i][0].split(",");
+			var child_cut_sheet = getSheetByCutId(list, split_cut_into[0]);
+			if(child_cut_sheet != undefined) {
+				var table_row = "<tr><td>";
+				table_row += "Cut ";
+				if(i == list.length - 1) {
+					table_row += "a";
+				} else {
+					table_row += "each";
+				}
+				table_row += " " + list[i].width + "x" + list[i].height + " sheet into ";
+				table_row += split_cut_into[1]+" " + child_cut_sheet.width + "x" + child_cut_sheet.height + " sheet(s).";
+				table_row += "</td></tr>";
+				tbody.innerHTML += table_row;
+			}
+		}
+	}
+	elements_div.appendChild(cut_info);
+	
+	var confirm = document.createElement("button");
+	confirm.className = "btn btn-success btn-md";
+	confirm.style = "margin-left:8px;";
+	confirm.innerHTML = "Confirm Cut(s)";
+	
+	confirm.onclick = function() {
+		// Go to another page
+	}
+	
+	cut_info.appendChild(confirm);
+	
+	var cancel = document.createElement("button");
+	cancel.className = "btn btn-danger btn-md";
+	cancel.style = "margin-left:8px;";
+	cancel.innerHTML = "Cancel";
+	
+	cancel.onclick = function() {
+		makeSheetSellingElements();
+	}
+	
+	cut_info.appendChild(cancel);
+}
+
+
+
+// I'm not sure how jon wants us to call php functions
 function callPHP(url, params, callback_function) {
     var post = new XMLHttpRequest();
     post.open("POST", url);
