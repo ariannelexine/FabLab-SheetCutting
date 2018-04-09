@@ -13,15 +13,19 @@ CREATE TABLE variants (
   type_id INT REFERENCES sheet_type(type_id)
 );
 
--- Auto increment? 
 CREATE TABLE cut_sizes (
-  cut_id INT PRIMARY KEY,
+  cut_id INT PRIMARY KEY AUTO_INCREMENT,
   width INT,  
   height INT,
   price DECIMAL,
-  child_id INT REFERENCES CUT_SIZES(cut_id),
-  amount INT,
   type_id INT REFERENCES sheet_type(type_id)
+);
+
+CREATE TABLE cutsize_children (
+  childcut_id INT PRIMARY KEY AUTO_INCREMENT,
+  parent_id INT REFERENCES CUT_SIZES(cut_id),  
+  child_id INT REFERENCES CUT_SIZES(cut_id),
+  amount INT
 );
 
 CREATE TABLE sheet_inventory (
@@ -32,4 +36,7 @@ CREATE TABLE sheet_inventory (
   staff_id VARCHAR(10),
   removed_date datetime
 );
+
+
+
 

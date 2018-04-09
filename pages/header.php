@@ -195,10 +195,10 @@ if (isset($_SESSION['success_msg']) && $_SESSION['success_msg']!= ""){
                             <a href="#"><i class="fas fa-cut"></i> Sheet Cutting<span class="fas fa-angle-left"></span></a>
 							<ul class="nav nav-second-level">
                                 <li>
-                                    <a href="/kilns/webpage_inventory.php"><i class="fas fa-cubes"></i> Inventory</a>
+                                    <a href="/sheetcutting/webpage_inventory.php"><i class="fas fa-cubes"></i> Inventory</a>
                                 </li>
                                 <li>
-                                    <a href="/kilns/webpage_cutSheet.php"><i class="fas fa-cut"></i> Make a cut</a>
+                                    <a href="/sheetcutting/webpage_cutSheet.php"><i class="fas fa-cut"></i> Make a cut</a>
                                 </li>
                             </ul>
                         </li>
