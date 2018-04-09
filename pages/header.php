@@ -200,6 +200,12 @@ if (isset($_SESSION['success_msg']) && $_SESSION['success_msg']!= ""){
                                 <li>
                                     <a href="/sheetcutting/webpage_cutSheet.php"><i class="fas fa-cut"></i> Make a cut</a>
                                 </li>
+                                <li>
+                                    <a href="#"><i class="fas fa-truck"></i> Receive Inventory </a>
+                                </li>
+                                <li>
+                                    <a href="/sheetcutting/webpage_addNewSheetMaterial.php"><i class="fas fa-life-ring"></i> Manage Materials</a>
+                                </li>
                             </ul>
                         </li>
 						<li>
