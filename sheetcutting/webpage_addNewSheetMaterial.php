@@ -56,10 +56,12 @@ include_once ($_SERVER['DOCUMENT_ROOT'].'/pages/header.php');
 </div>
 <script type="text/javascript" charset="utf-8">
 	var lastVariantID = 1;
+	var variant_ids_reference = ["Variant1"];
 	
 	var AddVariant = function() {
 		var tableRow = document.createElement("tr");
 		tableRow.id = "Variant" + (++lastVariantID);
+		variant_ids_reference.push(tableRow.id);
 		tableRow.style = "height:100px;";
 		var tableEntry = document.createElement("td");
 		tableRow.appendChild(tableEntry);
@@ -80,6 +82,7 @@ include_once ($_SERVER['DOCUMENT_ROOT'].'/pages/header.php');
 		
 		tableEntry.appendChild(variant_text);
 		tableEntry.appendChild(variant_textbox);
+		// 
 		tableEntry.appendChild(document.createElement("br"));
 		tableEntry.appendChild(document.createElement("br"));
 		tableEntry.appendChild(variant_removeButtonThis);
@@ -90,6 +93,8 @@ include_once ($_SERVER['DOCUMENT_ROOT'].'/pages/header.php');
 	
 	var DeleteHTMLElement = function(id) {
 		var e = document.getElementById(id);
+		variant_ids_reference.splice(variant_ids_reference.indexOf(id));
+		console.log(variant_ids_reference);
 		e.parentNode.removeChild(e);
 	}
 	var AddMaterial = function() {

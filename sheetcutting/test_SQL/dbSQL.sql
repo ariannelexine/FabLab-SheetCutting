@@ -61,4 +61,3 @@ GROUP BY name, width, height;
 variant
 count
 from parent */
-

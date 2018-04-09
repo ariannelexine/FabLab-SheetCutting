@@ -204,13 +204,7 @@ function showCutTreeResults(response) {
 			var child_cut_sheet = getSheetByCutId(list, split_cut_into[0]);
 			if(child_cut_sheet != undefined) {
 				var table_row = "<tr><td>";
-				table_row += "Cut ";
-				if(i == list.length - 1) {
-					table_row += "a";
-				} else {
-					table_row += "each";
-				}
-				table_row += " " + list[i].width + "x" + list[i].height + " sheet into ";
+				table_row += "Cut a " + list[i].width + "x" + list[i].height + " sheet into ";
 				table_row += split_cut_into[1]+" " + child_cut_sheet.width + "x" + child_cut_sheet.height + " sheet(s).";
 				table_row += "</td></tr>";
 				tbody.innerHTML += table_row;
