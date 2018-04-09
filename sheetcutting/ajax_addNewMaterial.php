@@ -48,6 +48,7 @@ if ($result = $connection->query($sql)) {
             if ($result = $connection->query($variantsql)) {
                 echo "successfully added.";
             }
+        }
 
         // ---- Insert into the cut_size table all the new sizes decoded from the json string ---
         $size_json = $_POST["sizes"];
@@ -69,7 +70,6 @@ if ($result = $connection->query($sql)) {
             if ($result = $connection->query($sizesql)) {
                 echo "successfully added.";
             }
-        }
         }
     }
 }

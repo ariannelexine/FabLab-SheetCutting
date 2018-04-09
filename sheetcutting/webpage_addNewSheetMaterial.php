@@ -37,13 +37,13 @@ include_once ($_SERVER['DOCUMENT_ROOT'].'/pages/header.php');
 							</tr>
 							<tr id="addSize">
 								<td>
-									<button onclick="AddSize()" class="btn btn-info btn-md">Add Cut Sizes</button>
+									<button onclick="AddSize()" class="btn btn-warning btn-md">Add Cut Sizes</button>
 								</td>
 							</tr>
 							<tr id="buttons">
 								<td>
-									<button onclick="Cancel();" class="btn btn-danger btn-md pull-right">Cancel</button>
-									<button onclick="AddMaterial()" class="btn btn-success btn-md pull-right" style="margin-right:8px;">Add Material</button>
+									<button onclick="AddMaterial()" class="btn btn-success btn-md">Add Material</button>
+									<button onclick="Cancel();" class="btn btn-danger btn-md">Cancel</button>
 								</td>
 							</tr>
 						</tbody>
@@ -179,7 +179,7 @@ include_once ($_SERVER['DOCUMENT_ROOT'].'/pages/header.php');
 
 	var DeleteHTMLElement = function(array, id) {
 		var e = document.getElementById(id);
-		array.splice(array.indexOf(id));
+		e.parentNode.removeChild(e);
 		var index = array.indexOf(id);
 		if (index > -1) {
 			array.splice(index, 1);
