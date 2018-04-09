@@ -46,7 +46,7 @@ if ($result = $connection->query($sql)) {
             $variantsql = "INSERT INTO variants VALUES (".$id.", ".$description.", ".$name.", ".$colorhex.", ".$type_id.");";
 
             if ($result = $connection->query($variantsql)) {
-                echo "successfully added.";
+                echo "Added " . $name , "\n";
             }
         }
 
@@ -68,10 +68,11 @@ if ($result = $connection->query($sql)) {
             $sizesql = "INSERT INTO cut_sizes (width, height, price, type_id) VALUES (".$width.", ".$height.", ".$price.", ".$type_id.");";
 
             if ($result = $connection->query($sizesql)) {
-                echo "successfully added.";
+                echo "Added " . $width . "x" . $height . "\n";
             }
         }
     }
+    echo "Successfully added " . $_POST["sheet_type"];
 }
 
 $connection->close();
