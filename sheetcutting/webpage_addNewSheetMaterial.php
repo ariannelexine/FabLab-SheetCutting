@@ -180,7 +180,6 @@ include_once ($_SERVER['DOCUMENT_ROOT'].'/pages/header.php');
 	var DeleteHTMLElement = function(array, id) {
 		var e = document.getElementById(id);
 		array.splice(array.indexOf(id));
-		e.parentNode.removeChild(e);
 		var index = array.indexOf(id);
 		if (index > -1) {
 			array.splice(index, 1);
