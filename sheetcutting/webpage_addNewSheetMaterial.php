@@ -33,11 +33,12 @@ include_once ($_SERVER['DOCUMENT_ROOT'].'/pages/header.php');
 							<tr id="addVariant">
 								<td>
 									<button onclick="AddVariant()" class="btn btn-warning btn-md">Add Variant</button>
+									<button onclick="AddColorVariant()" class="btn btn-warning btn-md" style="margin-left:8px;">Add Color Variant</button>
 								</td>
 							</tr>
 							<tr id="addSize">
 								<td>
-									<button onclick="AddSize()" class="btn btn-warning btn-md">Add Cut Sizes</button>
+									<button onclick="AddSize()" class="btn btn-info btn-md">Add Cut Sizes</button>
 								</td>
 							</tr>
 							<tr id="buttons">
@@ -54,15 +55,17 @@ include_once ($_SERVER['DOCUMENT_ROOT'].'/pages/header.php');
 	</div>
 </div>
 <script type="text/javascript" charset="utf-8">
+	var lastcolorVariantID = 0;
 	var lastVariantID = 0;
 	var lastSizeID = 0;
+	var colorvariant_id_reference = [];
 	var variant_id_reference = [];
 	var size_id_reference = [];
 	
-	var AddVariant = function() {
+	var AddColorVariant = function() {
 		var tableRow = document.createElement("tr");
-		tableRow.id = "Variant" + (++lastVariantID);
-		variant_id_reference.push(tableRow.id);
+		tableRow.id = "colorVariant" + (++lastcolorVariantID);
+		colorvariant_id_reference.push(tableRow.id);
 		tableRow.style = "height:100px;";
 		var tableEntry = document.createElement("td");
 		tableRow.appendChild(tableEntry);
@@ -76,20 +79,20 @@ include_once ($_SERVER['DOCUMENT_ROOT'].'/pages/header.php');
 		variant_textbox.id = "variantid";
 
 		// Variant name 
-		var variant_name = document.createElement("b");
-		variant_name.innerHTML = "Name:";
-		variant_name.style = "margin-left:4px;";
-		var name_textbox = document.createElement("input");
-		name_textbox.style = "margin-left:4px;";
-		name_textbox.id = "variantname";
+		var colorvariant_name = document.createElement("b");
+		colorvariant_name.innerHTML = "Name:";
+		colorvariant_name.style = "margin-left:4px;";
+		var colorname_textbox = document.createElement("input");
+		colorname_textbox.style = "margin-left:4px;";
+		colorname_textbox.id = "variantname";
 
 		// Variant Description 
-		var variant_desc = document.createElement("b");
-		variant_desc.innerHTML = "Description:";
-		variant_desc.style = "margin-left:4px;";
-		var desc_textbox = document.createElement("input");
-		desc_textbox.style = "margin-left:4px;";
-		desc_textbox.id = "variantdesc";
+		var colorvariant_desc = document.createElement("b");
+		colorvariant_desc.innerHTML = "Description:";
+		colorvariant_desc.style = "margin-left:4px;";
+		var colordesc_textbox = document.createElement("input");
+		colordesc_textbox.style = "margin-left:4px;";
+		colordesc_textbox.id = "variantdesc";
 
 		// Variant colorhex
 		var variant_color = document.createElement("b");
@@ -99,25 +102,25 @@ include_once ($_SERVER['DOCUMENT_ROOT'].'/pages/header.php');
 		color_textbox.style = "margin-left:4px;";
 		color_textbox.id = "variantcolor";
 		
-		var variant_removeButtonThis = document.createElement("button");
-		variant_removeButtonThis.className = "btn btn-danger btn-md";
-		variant_removeButtonThis.style = "margin-left:8px;";
-		variant_removeButtonThis.innerHTML = "Remove";
-		variant_removeButtonThis.onclick = function() {
-			DeleteHTMLElement(variant_id_reference, tableRow.id);
+		var colorvariant_removeButtonThis = document.createElement("button");
+		colorvariant_removeButtonThis.className = "btn btn-danger btn-md";
+		colorvariant_removeButtonThis.style = "margin-left:8px;";
+		colorvariant_removeButtonThis.innerHTML = "Remove";
+		colorvariant_removeButtonThis.onclick = function() {
+			DeleteHTMLElement(colorvariant_id_reference, tableRow.id);
 		}
 		
 		tableEntry.appendChild(variant_text);
 		tableEntry.appendChild(variant_textbox);
-		tableEntry.appendChild(variant_name);
-		tableEntry.appendChild(name_textbox);
-		tableEntry.appendChild(variant_desc);
-		tableEntry.appendChild(desc_textbox);
+		tableEntry.appendChild(colorvariant_name);
+		tableEntry.appendChild(colorname_textbox);
+		tableEntry.appendChild(colorvariant_desc);
+		tableEntry.appendChild(colordesc_textbox);
 		tableEntry.appendChild(variant_color);
 		tableEntry.appendChild(color_textbox);
 		tableEntry.appendChild(document.createElement("br"));
 		tableEntry.appendChild(document.createElement("br"));
-		tableEntry.appendChild(variant_removeButtonThis);
+		tableEntry.appendChild(colorvariant_removeButtonThis);
 		
 		var e = document.getElementById("addVariant");
 		e.parentNode.insertBefore(tableRow, e);
@@ -175,14 +178,54 @@ include_once ($_SERVER['DOCUMENT_ROOT'].'/pages/header.php');
 		
 		var e = document.getElementById("addSize");
 		e.parentNode.insertBefore(tableRow, e);
-	}	
+	}
+
+	var AddVariant = function() {
+		var tableRow = document.createElement("tr");
+		tableRow.id = "Variant" + (++lastVariantID);
+		variant_id_reference.push(tableRow.id);
+		tableRow.style = "height:100px;";
+		var tableEntry = document.createElement("td");
+		tableRow.appendChild(tableEntry);
+
+		// Variant name 
+		var variant_name = document.createElement("b");
+		variant_name.innerHTML = "Name:";
+		variant_name.style = "margin-left:4px;";
+		var name_textbox = document.createElement("input");
+		name_textbox.style = "margin-left:4px;";
+		name_textbox.id = "variantname";
+
+		// Variant Description 
+		var variant_desc = document.createElement("b");
+		variant_desc.innerHTML = "Description:";
+		variant_desc.style = "margin-left:4px;";
+		var desc_textbox = document.createElement("input");
+		desc_textbox.style = "margin-left:4px;";
+		desc_textbox.id = "variantdesc";
+		
+		var variant_removeButtonThis = document.createElement("button");
+		variant_removeButtonThis.className = "btn btn-danger btn-md";
+		variant_removeButtonThis.style = "margin-left:8px;";
+		variant_removeButtonThis.innerHTML = "Remove";
+		variant_removeButtonThis.onclick = function() {
+			DeleteHTMLElement(variant_id_reference, tableRow.id);
+		}
+		
+		tableEntry.appendChild(variant_name);
+		tableEntry.appendChild(name_textbox);
+		tableEntry.appendChild(variant_desc);
+		tableEntry.appendChild(desc_textbox);
+		tableEntry.appendChild(document.createElement("br"));
+		tableEntry.appendChild(document.createElement("br"));
+		tableEntry.appendChild(variant_removeButtonThis);
+		
+		var e = document.getElementById("addVariant");
+		e.parentNode.insertBefore(tableRow, e);
+	}		
 
 	var DeleteHTMLElement = function(array, id) {
 		var e = document.getElementById(id);
-<<<<<<< HEAD
-		array.splice(array.indexOf(id));
-=======
->>>>>>> Demo
 		e.parentNode.removeChild(e);
 		var index = array.indexOf(id);
 		if (index > -1) {
@@ -195,10 +238,11 @@ include_once ($_SERVER['DOCUMENT_ROOT'].'/pages/header.php');
 		var textbox = document.getElementById("field1");
 		var textbox_string = textbox.value;
 
+		var json_colorvariants = getColorVariantJSON();
 		var json_variants = getVariantJSON();
 		var json_sizes = getSizesJSON();
 		
-		var params = "sheet_type=" + textbox_string + "&variants=" + json_variants + "&sizes=" + json_sizes;
+		var params = "sheet_type=" + textbox_string + "&colorvariants=" + json_colorvariants + "&variants=" + json_variants + "&sizes=" + json_sizes;
 		
 		callPHP('ajax_addNewMaterial.php', params, function(response){
 			 alert(response);
@@ -210,17 +254,17 @@ include_once ($_SERVER['DOCUMENT_ROOT'].'/pages/header.php');
 	}
 
 /*
-	Get array of all variants attributes in the textboxes and 
+	Get array of all color variants attributes in the textboxes and 
 	create a JSON object for each variant and add it into an array
 	of variant objects. The array will turn into a json string 
 	to be attatched to the post params to be sent to the server. 
 */
-function getVariantJSON() {
+function getColorVariantJSON() {
 	var variant_array = []; // Array of all the variant object
 
-	var variantLength = variant_id_reference.length;
+	var variantLength = colorvariant_id_reference.length;
 	for (var i = 0; i < variantLength; i++) {
-		var variant_id = variant_id_reference[i];
+		var variant_id = colorvariant_id_reference[i];
 		var row = document.getElementById(variant_id);
 
 		var variantid = row.querySelector("#variantid");
@@ -236,10 +280,39 @@ function getVariantJSON() {
 		var variantcolor_string = variantcolor.value;
 		
 		var object = { 
-			"id" : variantid_string, 
+			"colorid" : variantid_string, 
+			"colorname" : variantname_string, 
+			"colordescription": variantdesc_string, 
+			"colorhex": variantcolor_string 
+		};
+		variant_array.push(object);
+	}
+	return JSON.stringify(variant_array);
+}
+
+/*
+	Get array of all variants attributes in the textboxes and 
+	create a JSON object for each variant and add it into an array
+	of variant objects. The array will turn into a json string 
+	to be attatched to the post params to be sent to the server. 
+*/
+function getVariantJSON() {
+	var variant_array = []; // Array of all the variant object
+
+	var variantLength = variant_id_reference.length;
+	for (var i = 0; i < variantLength; i++) {
+		var variant_id = variant_id_reference[i];
+		var row = document.getElementById(variant_id);
+
+		var variantname = row.querySelector("#variantname");
+		var variantname_string = variantname.value;
+
+		var variantdesc = row.querySelector("#variantdesc");
+		var variantdesc_string = variantdesc.value;
+
+		var object = { 
 			"name" : variantname_string, 
 			"description": variantdesc_string, 
-			"colorhex": variantcolor_string 
 		};
 		variant_array.push(object);
 	}

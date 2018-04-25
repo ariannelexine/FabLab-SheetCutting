@@ -6,7 +6,8 @@ CREATE TABLE sheet_type (
 );
 
 CREATE TABLE variants (
-  variant_id VARCHAR(10) PRIMARY KEY,
+  variant_id INT PRIMARY KEY AUTO_INCREMENT,
+  color_id VARCHAR(10),
   description VARCHAR(15),
   name VARCHAR(30),
   colorhex VARCHAR(6),

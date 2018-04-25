@@ -201,10 +201,10 @@ if (isset($_SESSION['success_msg']) && $_SESSION['success_msg']!= ""){
                                     <a href="/sheetcutting/webpage_cutSheet.php"><i class="fas fa-cut"></i> Make a cut</a>
                                 </li>
                                 <li>
-                                    <a href="/sheetcutting/webpage_addNewInventory.php"><i class="fas fa-truck"></i> New Inventory </a>
+                                    <a href="/sheetcutting/webpage_addNewInventory.php"><i class="fas fa-truck"></i> Manage Inventory </a>
                                 </li>
                                 <li>
-                                    <a href="/sheetcutting/webpage_addNewSheetMaterial.php"><i class="fas fa-life-ring"></i> Manage Materials</a>
+                                    <a href="/sheetcutting/webpage_addNewSheetMaterial.php"><i class="fas fa-life-ring"></i> New Materials</a>
                                 </li>
                             </ul>
                         </li>	
