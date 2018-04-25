@@ -24,10 +24,10 @@ include_once ($_SERVER['DOCUMENT_ROOT'].'/pages/header.php');
                 <div class="panel-body">
                 <table class="table table-striped table-bordered table-hover">
 						<tbody>
-							<tr id="inventory0">
+							<tr id="newInventory">
                             <td>
                             <b>Select Type:</b>
-                                <select name="typeSelect" id="typeSelect0" style="margin-right:12px;" onchange="getSheetInfo(0)">
+                                <select name="typeSelect" id="typeSelect" style="margin-right:12px;" onchange="getSheetInfo()">
                                 <option disabled hidden selected value="">Sheet</option>
                                     <?php if($result = $mysqli->query("
                                             SELECT *
@@ -39,15 +39,15 @@ include_once ($_SERVER['DOCUMENT_ROOT'].'/pages/header.php');
                                     }?>
                                 </select>
                                 <b>Select Variant:</b> 
-                                <select name="variant" id="variantSelect0" style="margin-right:12px;">
+                                <select name="variant" id="variantSelect" style="margin-right:12px;">
                                     <option disabled hidden selected value="">Variant</option>
                                 </select>
                                 <b>Select Size:</b> 
-                                <select name="size" id="sizeSelect0" style="margin-right:12px;">
+                                <select name="size" id="sizeSelect" style="margin-right:12px;">
                                     <option disabled hidden selected value="">Size</option>
                                 </select>
                                 <b>Amount:</b>
-                                <input type="number" id="addAmount0" value="" style="sheet: 60px; margin-right:12px;" id="amount" />
+                                <input type="number" id="addAmount" value="" style="width: 60px; margin-right:12px;" id="amount" />
                             </td>
 							</tr>
                             <tr id="addMoreInventory">
@@ -68,99 +68,18 @@ include_once ($_SERVER['DOCUMENT_ROOT'].'/pages/header.php');
         </div>
 
 <script>
-var lastID = 0;
-var id_reference = [];
-
-var getSheetInfo = function(id) {
-    var params = "sheet_type=" + document.getElementById("typeSelect" + id).value;
+var getSheetInfo = function() {
+    var params = "sheet_type=" + document.getElementById("typeSelect").value;
     callPHP('ajax_getSheetInfo.php', params, function(response){
         var response_split = response.split("cuts");
        
-        var variant_list = document.getElementById("variantSelect" + id);
+        var variant_list = document.getElementById("variantSelect");
         variant_list.innerHTML = response_split[0];
         
-        var variant_list = document.getElementById("sizeSelect" + id);
+        var variant_list = document.getElementById("sizeSelect");
         variant_list.innerHTML = response_split[1];
 	});
 }
-
-var AddMoreInventory = function() {
-        var id = ++lastID;
-        var tableRow = document.createElement("tr");
-		tableRow.id = "inventory" + (id);
-		id_reference.push(tableRow.id);
-		tableRow.style = "height:100px;";
-		var tableEntry = document.createElement("td");
-		tableRow.appendChild(tableEntry);
-
-        var sheet_name = document.createElement("b");
-		sheet_name.innerHTML = "Sheet Type: ";
-        var sheet_select = document.createElement("SELECT");
-        sheet_select.id = "typeSelect" + id;
-        var option = document.createElement("option");
-        option.text = "Sheet";
-        option.selected = "true";
-        option.value = "";
-        option.disabled = "disabled";
-        option.hidden = "true";
-        sheet_select.add(option);
-
-        <?php if($result = $mysqli->query("
-                SELECT *
-                FROM `sheet_type`;
-        ")){
-                while($row = $result->fetch_assoc()){
-                        echo("var x = document.createElement('option');
-                             x.value ='$row[type_id]';
-                             x.text = '$row[type]';
-                             sheet_select.add(x);");
-                }
-        }?>
-
-        var variant_name = document.createElement("b");
-		variant_name.innerHTML = "Select Variant: ";
-        var variant_select = document.createElement("SELECT");
-        variant_select.id = "variantSelect" + id;
-        var option = document.createElement("option");
-        option.text = "Variant";
-        option.selected = "true";
-        option.value = "";
-        option.disabled = "disabled";
-        option.hidden = "true";
-        variant_select.add(option);
-
-        var size_name = document.createElement("b");
-		size_name.innerHTML = "Select Size: ";
-        var size_select = document.createElement("SELECT");
-        size_select.id = "sizeSelect" + id;
-        var option = document.createElement("option");
-        option.text = "Size";
-        option.selected = "true";
-        option.value = "";
-        option.disabled = "disabled";
-        option.hidden = "true";
-        size_select.add(option);
-        var amount_name = document.createElement("b");
-        amount_name.innerHTML = "Amount: ";
-        var amount_textbox = document.createElement("input");
-		amount_textbox.style = "margin-left:4px;";
-		amount_textbox.id = "amountTextBox" + id;
-        
-        sheet_select.onchange = function() { getSheetInfo(id); }
-
-        tableEntry.appendChild(sheet_name);
-        tableEntry.appendChild(sheet_select);
-        tableEntry.appendChild(variant_name);
-        tableEntry.appendChild(variant_select);
-        tableEntry.appendChild(size_name);
-        tableEntry.appendChild(size_select);
-        tableEntry.appendChild(amount_name);
-        tableEntry.appendChild(amount_textbox);
-	
-		var e = document.getElementById("addMoreInventory");
-		e.parentNode.insertBefore(tableRow, e);
-        console.log(id_reference);
-	}
 
 var AddInventory = function() {
         var variantid = document.getElementById("variantSelect").value;
@@ -172,16 +91,6 @@ var AddInventory = function() {
 		callPHP('ajax_addNewInventory.php', params, function(response){
 			alert(response);
 		});
-}
-
-var DeleteHTMLElement = function(array, id) {
-    var e = document.getElementById(id);
-    e.parentNode.removeChild(e);
-    var index = array.indexOf(id);
-    if (index > -1) {
-        array.splice(index, 1);
-        console.log(array);
-    }
 }
 
 var Cancel = function() {
