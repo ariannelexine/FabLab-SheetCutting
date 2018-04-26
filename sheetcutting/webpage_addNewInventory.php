@@ -20,52 +20,53 @@ include_once ($_SERVER['DOCUMENT_ROOT'].'/pages/header.php');
             <div class="panel panel-default">
             <div class="panel-heading">
                     <i class="fas fa-cubes fa-lg"></i> Add new Inventory
-                </div>
+                    <a type="button" style="margin-top:-7px;margin-right:-12px;" class="btn btn-info btn-md pull-right" href="http://fabapp/sheetcutting/webpage_inventory.php"> 
+                    View Inventory
+                    </a>
+            </div>
                 <div class="panel-body">
                 <table class="table table-striped table-bordered table-hover">
-						<tbody>
-							<tr id="newInventory">
+                    <tbody>
+                        <form id = "iform">
+                        <tr id="newInventory" class="tablerow">
+                        <td>
+                        <b>Select Type:</b>
+                            <select name="typeSelect" id="typeSelect" style="margin-right:12px;" onchange="getSheetInfo()">
+                            <option disabled hidden selected value="">Sheet</option>
+                                <?php if($result = $mysqli->query("
+                                        SELECT *
+                                        FROM `sheet_type`;
+                                ")){
+                                        while($row = $result->fetch_assoc()){
+                                                echo("<option value='$row[type_id]'>$row[type]</option>");
+                                        }
+                                }?>
+                            </select>
+                            <b>Select Variant:</b> 
+                            <select name="variant" id="variantSelect" style="margin-right:12px;">
+                                <option disabled hidden selected value="">Variant</option>
+                            </select>
+                            <b>Select Size:</b> 
+                            <select name="size" id="sizeSelect" style="margin-right:12px;">
+                                <option disabled hidden selected value="">Size</option>
+                            </select>
+                            <b>Amount:</b>
+                            <input type="number" id="addAmount" value="" style="width: 60px; margin-right:12px;" id="amount" />
+                        </td>
+                        </form>
+                        </tr>
+                        <tr id="buttons">
                             <td>
-                            <b>Select Type:</b>
-                                <select name="typeSelect" id="typeSelect" style="margin-right:12px;" onchange="getSheetInfo()">
-                                <option disabled hidden selected value="">Sheet</option>
-                                    <?php if($result = $mysqli->query("
-                                            SELECT *
-                                            FROM `sheet_type`;
-                                    ")){
-                                            while($row = $result->fetch_assoc()){
-                                                    echo("<option value='$row[type_id]'>$row[type]</option>");
-                                            }
-                                    }?>
-                                </select>
-                                <b>Select Variant:</b> 
-                                <select name="variant" id="variantSelect" style="margin-right:12px;">
-                                    <option disabled hidden selected value="">Variant</option>
-                                </select>
-                                <b>Select Size:</b> 
-                                <select name="size" id="sizeSelect" style="margin-right:12px;">
-                                    <option disabled hidden selected value="">Size</option>
-                                </select>
-                                <b>Amount:</b>
-                                <input type="number" id="addAmount" value="" style="width: 60px; margin-right:12px;" id="amount" />
+                                <button onclick="Cancel();" class="btn btn-danger btn-md pull-right" >Cancel</button>
+                                <button onclick="AddInventory()" class="btn btn-success btn-md pull-right" style="margin-right:8px;"><span class="glyphicon glyphicon-ok"></span> Add to Inventory</button>
                             </td>
-							</tr>
-                            <tr id="addMoreInventory">
-								<td>
-									<button onclick="AddMoreInventory()" class="btn btn-warning btn-md">Add Another Sheet</button>
-								</td>
-							</tr>
-                            <tr id="buttons">
-								<td>
-									<button onclick="Cancel();" class="btn btn-danger btn-md pull-right" >Cancel</button>
-                                    <button onclick="AddInventory()" class="btn btn-success btn-md pull-right" style="margin-right:8px;">Add to Inventory</button>
-								</td>
-							</tr>
-						</tbody>
-					</table>
-                </div>
+                        </tr>
+                    </tbody>
+                </table>
+                <div id = "alert_placeholder"></div>
             </div>
         </div>
+    </div>
 
 <script>
 var getSheetInfo = function() {
@@ -82,20 +83,38 @@ var getSheetInfo = function() {
 }
 
 var AddInventory = function() {
-        var variantid = document.getElementById("variantSelect").value;
-        var cutid = document.getElementById("sizeSelect").value;
-		var amount = document.getElementById("addAmount").value;
+        var variant = document.getElementById("variantSelect");
+        var cut = document.getElementById("sizeSelect");
+		var amount = document.getElementById("addAmount");
+        var type = document.getElementById("typeSelect");
 
-		var params = "variantid=" + variantid + "&cutid=" + cutid + "&amount=" + amount;
+		var params = "variantid=" + variant.value + "&cutid=" + cut.value + "&amount=" + amount.value;
 		
 		callPHP('ajax_addNewInventory.php', params, function(response){
-			alert(response);
+            if(response != 0) {
+                var msg = "Successfully added " + response + " '" + cut.options[cut.selectedIndex].text + " " + variant.options[variant.selectedIndex].text + " " + type.options[type.selectedIndex].text + "' sheets.";
+                $('#alert_placeholder').append('<div id="alertdiv" class="alert alert-success alert-dismissible"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>' + msg + '</div>')
+                resetFields();
+            }
+            else {
+                $('#alert_placeholder').append('<div id="alertdanger" class="alert alert-danger alert-dismissible"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>Failed to add new inventory.</div>')
+                setTimeout(function() { // this will automatically close the alert and remove this if the users doesnt close it in 3 secs
+                $("#alertdanger").fadeOut();
+                }, 3000);
+            }
 		});
 }
 
 var Cancel = function() {
-    window.history.back();
+    resetFields();
 }
+
+var resetFields = function() {
+    document.getElementById("iform").reset();
+                document.getElementById("variantSelect").innerHTML = '<option disabled hidden selected value="">Variant</option>';
+                document.getElementById("sizeSelect").innerHTML = '<option disabled hidden selected value="">Size</option>';
+}
+
 // I'm not sure how jon wants us to call php functions, so this is just temporary.
 function callPHP(url, params, callback_function) {
 var post = new XMLHttpRequest();

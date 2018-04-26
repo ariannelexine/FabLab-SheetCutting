@@ -11,7 +11,7 @@ if ($connection->connect_error) {
 $sql ="SELECT * FROM variants WHERE type_id = ".$_POST["sheet_type"]." ORDER BY name ASC;";
 if ($result = $connection->query($sql)) {
 	while ($row = $result->fetch_assoc() ){
-        echo("<option value='$row[variant_id]'>$row[name] ($row[variant_id])</option>");
+        echo("<option value='$row[variant_id]'>$row[name]</option>");
 	}
 }
 
