@@ -1,12 +1,5 @@
 <?php
-$server = 'localhost';
-$user = 'Fablabian';
-$password = 'sbVaBEd3eW9dxmdb';
-$database = 'fabapp-v0.9';
-$connection = mysqli_connect($server, $user, $password, $database);
-if ($connection->connect_error) {
-	exit('Connection failed: ' . $connection->connect_error);
-}
+include('ajax_connectToDatabase.php');
 include('class_sheet.php');
 session_start();
 
@@ -15,8 +8,7 @@ $starter_sheet = new Sheet($_POST["sheet_type"], $_POST["name"], $_POST["variant
 
 find_parents($starter_sheet, $connection);
 
-//print_r($starter_sheet->parents);
-
+// Find all the parents for the current sheet
 function find_parents(&$sheet, $connection) {
 	$sql = 'SELECT cut_id FROM cut_sizes WHERE width='.$sheet->width.' AND height = '.$sheet->height;
 	if ($result = $connection->query($sql)) {
@@ -76,10 +68,10 @@ function get_cuts(&$sheet, &$list) {
 							$list = array_merge($list, $list1);
 							return $path1;
 						}
-					} else if($distance1 < $distance2){
+					} else if($distance1 > $distance2){
 						$list = array_merge($list, $list1);
 						return $path1;
-					} else if($distance1 > $distance2){
+					} else if($distance1 < $distance2){
 						$list = array_merge($list, $list2);
 						return $path2;
 					} else {
@@ -108,7 +100,7 @@ for($i = 0; $i < count($list); $i++) {
 	$cut_into_elements = [];
 	if ($result = $connection->query($sql_cuts)) {
 		while ($row = $result->fetch_assoc()) {
-			array_push($cut_into_elements, $row["child_id"].','.$row["amount"]);
+			array_push($cut_into_elements, [$row["child_id"],$row["amount"]]);
 		}
 	}
 	array_push($cut_into, $cut_into_elements);
@@ -125,6 +117,7 @@ if($last_element->amount > 0) {
 } else { 
 	// No sheets could be found, alert worker that there is no stock.
 	echo 'Out of stock!';
+	//echo json_encode($send_data);
 }
 
 $connection->close();

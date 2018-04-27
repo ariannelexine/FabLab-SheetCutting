@@ -1,25 +1,42 @@
 <?php
-$server = 'localhost';
-$user = 'Fablabian';
-$password = 'sbVaBEd3eW9dxmdb';
-$database = 'fabapp-v0.9';
-$connection = mysqli_connect($server, $user, $password, $database);
-if ($connection->connect_error) {
-	exit('Connection failed: ' . $connection->connect_error);
-}
+include('ajax_connectToDatabase.php');
 
-$sql = "SELECT DISTINCT type, c.cut_id, v.variant_id, v.colorhex, name, width, height, price, count(obj_id) as 'In Stock'
+$sql = "
+SELECT width, height, count(obj_id) as 'In Stock'
 FROM sheet_type s
-LEFT JOIN cut_sizes as c ON s.type_id = c.type_id
 LEFT JOIN variants as v ON s.type_id = v.type_id
-LEFT JOIN sheet_inventory as i ON i.variant_id = v.variant_id AND i.cut_id = c.cut_id
-WHERE i.removed_date IS NULL AND name = '".$_POST["name"]."' AND height = '".$_POST["height"]."' AND width = '".$_POST["width"]."';";
+LEFT JOIN sheet_inventory as i ON i.variant_id = v.variant_id
+LEFT JOIN cut_sizes as c ON i.cut_id = c.cut_id
+WHERE i.removed_date IS NULL AND s.type = '".$_POST["sheet_type"]."' AND v.name = '".$_POST["variant_name"]."'
+GROUP BY width, height
+";
 
+$cutsizes_stock = [];
 if ($result = $connection->query($sql)) {
 	while ($row = $result->fetch_assoc() ){
-		echo $row['In Stock'] . ',' . $row['price'] . ',' . $row['cut_id'];
+		if($row['width'] != NULL && $row['height'] != NULL) {
+			array_push($cutsizes_stock, [$row['width'], $row['height'], $row['In Stock']]);
+		}
 	}
 }
+
+$sql = "
+SELECT DISTINCT cut_id, width, height, price
+FROM cut_sizes c
+LEFT JOIN sheet_type as s on c.type_id = s.type_id
+WHERE s.type = '".$_POST["sheet_type"]."'
+GROUP BY width, height
+";
+
+$cutsizes_id_price = [];
+if ($result = $connection->query($sql)) {
+	while ($row = $result->fetch_assoc() ){
+		array_push($cutsizes_id_price, [$row['width'], $row['height'], $row['cut_id'], $row['price']]);
+	}
+}
+
+
+echo json_encode([$cutsizes_stock, $cutsizes_id_price]);
 
 $connection->close();
  ?>
