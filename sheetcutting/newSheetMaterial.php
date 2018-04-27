@@ -5,8 +5,21 @@
  */
  //This will import all of the CSS and HTML code nessary to build the basic page
 include_once ($_SERVER['DOCUMENT_ROOT'].'/pages/header.php');
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+   echo "<script>console.log( 'Debug Objects: " . $_POST["matName"] . "' );</script>";
+   $type_id = Sheet_Type::insertSheetType($_POST["matName"]);
+   if (is_int($type_id)) {
+       Variants::insertVariants($type_id, $_POST["variants"]);
+       Variants::insertColorVariants($type_id, $_POST["colorvariants"]);
+       Cut_Sizes::insertCutSizes($type_id, $_POST["sizes"]);
+       header("Location:newCutChildren.php?type_id=".$type_id);
+   }
+}
+
 ?>
-<title><?php echo $sv['site_name'];?> Base</title>
+
+<title><?php echo $sv['site_name'];?> New Sheet Material</title>
 <div id="page-wrapper">
     <div class="row">
         <div class="col-md-12">
@@ -22,38 +35,49 @@ include_once ($_SERVER['DOCUMENT_ROOT'].'/pages/header.php');
                     <i class="fas fa-cubes fa-lg"></i> Add new Sheet Material
                 </div>
 				<div class="panel-body">
-					<table class="table table-striped table-bordered table-hover">
+					<table class="table table-striped table-bordered table-hover" id="materialTable">
 						<tbody>
 							<tr id="materialName">
 								<td>
 									<b>Material Name:</b> 
-									<input style="margin-left:4px;" value="" name="field1" id="field1" tabindex="1" />
+									<input style="margin-left:4px;" value="" name="sheetType" id="sheetType" tabindex="1" />
 								</td>
 							</tr>
-							<tr id="addVariant">
+						</tbody>
+					</table>
+                    <table class="table table-striped table-bordered table-hover" id="variantTable">
+						<tbody>
+							<tr>
+								<th>
+									<b>Variants</b>
+								</th>
+							</tr>
+                            <div id="hidden_form_container" style="display:none;"></div>
+                            <tr id="addVariant">
 								<td>
 									<button onclick="AddVariant()" class="btn btn-warning btn-md">Add Variant</button>
 									<button onclick="AddColorVariant()" class="btn btn-warning btn-md" style="margin-left:8px;">Add Color Variant</button>
 								</td>
 							</tr>
-							<tr id="addSize">
+                            <tr id="addSize">
 								<td>
 									<button onclick="AddSize()" class="btn btn-info btn-md">Add Cut Sizes</button>
 								</td>
 							</tr>
-							<tr id="buttons">
+                            <tr id="buttons">
 								<td>
 									<button onclick="Cancel();" class="btn btn-danger btn-md pull-right">Cancel</button>
-									<button onclick="AddMaterial()" class="btn btn-success btn-md pull-right" style="margin-right:8px;">Add Material</button>
+									<button onclick="SubmitMaterial()" class="btn btn-success btn-md pull-right" style="margin-right:8px;">Add Material</button>
 								</td>
 							</tr>
-						</tbody>
-					</table>
+                        </tbody>
+					</table> 
 				</div>
 			</div>
 		</div>
 	</div>
 </div>
+
 <script type="text/javascript" charset="utf-8">
 	var lastcolorVariantID = 0;
 	var lastVariantID = 0;
@@ -233,22 +257,6 @@ include_once ($_SERVER['DOCUMENT_ROOT'].'/pages/header.php');
 			console.log(array);
 		}
 	}
-	var AddMaterial = function() {
-		// Get Material Name
-		var textbox = document.getElementById("field1");
-		var textbox_string = textbox.value;
-
-		var json_colorvariants = getColorVariantJSON();
-		var json_variants = getVariantJSON();
-		var json_sizes = getSizesJSON();
-		
-		var params = "sheet_type=" + textbox_string + "&colorvariants=" + json_colorvariants + "&variants=" + json_variants + "&sizes=" + json_sizes;
-		
-		callPHP('ajax_addNewMaterial.php', params, function(response){
-			 alert(response);
-		});
-	}
-	
 	var Cancel = function() {
 		window.history.back();
 	}
@@ -351,23 +359,43 @@ function getSizesJSON() {
 	}
 	return JSON.stringify(size_array);
 }
+	
+var SubmitMaterial = function() {
+  var theForm, matName;
+  
+  theForm = document.createElement('form');
+  theForm.method = 'post';
+  
+  matName = document.createElement('input');
+  matName.type = 'hidden';
+  matName.name = 'matName';
+  matName.value = document.getElementById("sheetType").value;
 
-	// I'm not sure how jon wants us to call php functions, so this is just temporary.
-function callPHP(url, params, callback_function) {
-    var post = new XMLHttpRequest();
-    post.open("POST", url);
-    post.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-	
-    post.onreadystatechange = function() { 
-		if(post.readyState == 4 && post.status == 200) {
-			callback_function(post.responseText);
-        }
-    }
-	
-    post.send(params);
+  colorvariants = document.createElement('input');
+  colorvariants.type = 'hidden';
+  colorvariants.name = 'colorvariants';
+  colorvariants.value = getColorVariantJSON();
+
+  variants = document.createElement('input');
+  variants.type = 'hidden';
+  variants.name = 'variants';
+  variants.value = getVariantJSON();
+
+  sizes = document.createElement('input');
+  sizes.type = 'hidden';
+  sizes.name = 'sizes';
+  sizes.value = getSizesJSON();
+
+  theForm.appendChild(matName);
+  theForm.appendChild(colorvariants);
+  theForm.appendChild(variants);
+  theForm.appendChild(sizes);
+
+  document.getElementById('hidden_form_container').appendChild(theForm);
+  
+  theForm.submit();
 }
 </script>
-
 <?php
 //Standard call for dependencies
 include_once ($_SERVER['DOCUMENT_ROOT'].'/pages/footer.php');
