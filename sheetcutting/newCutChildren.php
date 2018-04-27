@@ -60,7 +60,6 @@ if($error){
             <div class="panel-body">
             <form id="cform" name="cform" method="post" >
                 <table id="childTable" class="table table-striped table-bordered table-hover">
-                    <tbody>
                         <thead>
                             <tr>
                                 <th style="width: 25%; text-align: center"> Size </th>
@@ -68,49 +67,58 @@ if($error){
                                 <th style='text-align: center'> Child 2 </th>
                             </tr>
                         </thead>
-                        <?php
-                            foreach($cut_sizes as $size) { ?>
-                                <tr style='text-align: center'>
-                                <?php echo "<td>" . $size[width] . "x" . $size[height] . "</td>"; ?>
-                                    <td>
-                                    <?php echo "<select name='cArray[$size[cut_id]][child1]' style='margin-right:20px;'>"; ?>
-                                    <option value='NULL'>No Child</option>
-                                        <?php if($result = $mysqli->query("
-                                                SELECT *
-                                                FROM `cut_sizes`
-                                                WHERE `type_id` = $type_id;
-                                        ")){ while($row = $result->fetch_assoc()){
-                                                echo("<option value='$row[cut_id]'>$row[width]x$row[height]</option>");
-                                            }
-                                        }?>
-                                    </select>
-                                    <b>Amount:</b>
-                                    <?php echo "<input type='number' name='cArray[$size[cut_id]][amount1]' value='' style='width: 60px; margin-right:12px;'/>"; ?>
-                                    </td>
-                                    <td> 
-                                    <?php echo "<select name='cArray[$size[cut_id]][child2]' style='margin-right:20px;'>"; ?>
-                                    <option value='NULL'>No Child</option>
-                                        <?php if($result = $mysqli->query("
-                                                SELECT *
-                                                FROM `cut_sizes`
-                                                WHERE `type_id` = $type_id;
-                                        ")){ while($row = $result->fetch_assoc()){
-                                                echo("<option value='$row[cut_id]'>$row[width] x $row[height]</option>");
-                                            }
-                                        }?>
-                                    </select>
-                                    <b>Amount:</b>
-                                    <?php echo "<input type='number' name='cArray[$size[cut_id]][amount2]' value='' style='width: 60px; margin-right:12px;'/>"; ?>
-                                    </td>
-                                  </tr> 
-                        <?php } ?>
+                        <tbody>
+                        <tr style='text-align: center' id='childRow'>
+                        <td>
+                        <?php echo "<select class='parentSelect' name='cArray[0][parent]' style='margin-right:20px;'>"; ?>
+                            <option selected value='NULL'>Sheet</option>
+                                <?php if($result = $mysqli->query("
+                                        SELECT *
+                                        FROM `cut_sizes`
+                                        WHERE `type_id` = $type_id;
+                                ")){ while($row = $result->fetch_assoc()){
+                                        echo("<option value='$row[cut_id]'>$row[width]x$row[height]</option>");
+                                    }
+                                }?></td>
+                            <td>
+                            <?php echo "<select class='child1Select' name='cArray[0][child1]' style='margin-right:20px;'>"; ?>
+                            <option value='NULL'>No Child</option>
+                                <?php if($result = $mysqli->query("
+                                        SELECT *
+                                        FROM `cut_sizes`
+                                        WHERE `type_id` = $type_id;
+                                ")){ while($row = $result->fetch_assoc()){
+                                        echo("<option value='$row[cut_id]'>$row[width]x$row[height]</option>");
+                                    }
+                                }?>
+                            </select>
+                            <b>Amount:</b>
+                            <?php echo "<input class='amount1' type='number' name='cArray[0][amount1]' value='' style='width: 60px; margin-right:12px;'/>"; ?>
+                            </td>
+                            <td> 
+                            <?php echo "<select class='child2Select' name='cArray[0][child2]' style='margin-right:20px;'>"; ?>
+                            <option value='NULL'>No Child</option>
+                                <?php if($result = $mysqli->query("
+                                        SELECT *
+                                        FROM `cut_sizes`
+                                        WHERE `type_id` = $type_id;
+                                ")){ while($row = $result->fetch_assoc()){
+                                        echo("<option value='$row[cut_id]'>$row[width] x $row[height]</option>");
+                                    }
+                                }?>
+                            </select>
+                            <b>Amount:</b>
+                            <?php echo "<input class='amount2' type='number' name='cArray[0][amount2]' value='' style='width: 60px; margin-right:12px;'/>"; ?>
+                            </td>
+                        </tr>
                     </tbody>
                 </table>
+                <input type="button" onclick="cloneRow()" value="Add Children" /> 
                 <tr id="buttons">
                     <td>
                         <button onclick="Cancel();" class="btn btn-danger btn-md pull-right">Cancel</button>
                         <!-- <button onclick="AddChildren()" class="btn btn-success btn-md pull-right" style="margin-right:8px;">Add Cut Size Children</button> -->
-                        <input type="submit" name="childBtn" value="Add Cut Size Children" class="btn btn-success btn-md pull-right" style="margin-right:8px;">
+                        <input type="submit" name="childBtn" value="Save" class="btn btn-success btn-md pull-right" style="margin-right:8px;">
                     </td>
                 </tr>
                 </form>
@@ -121,11 +129,38 @@ if($error){
 <?php } ?>
 
 <script type="text/javascript" charset="utf-8">
+    var rowID = 0;
+
     window.onload = function() {
         $(function () {
             $('[data-toggle="popover"]').popover({ html : true})
         })
     }; 
+    var cloneRow = function() {
+        var row = document.getElementById("childRow"); 
+        
+        var table = document.getElementById("childTable"); 
+        var clone = row.cloneNode(true); 
+        var index = table.rows.length - 1;
+    
+        clone.querySelector(".parentSelect").name = "cArray[" + index + "][parent]";
+        clone.querySelector(".child1Select").name = "cArray[" + index + "][child1]";
+        clone.querySelector(".amount1").name = "cArray[" + index + "][amount1]";
+        clone.querySelector(".child2Select").name = "cArray[" + index + "][child2]";
+        clone.querySelector(".amount2").name = "cArray[" + index + "][amount2]";
+        
+        var inputs = clone.querySelectorAll("input");
+        // clear inputs in new row
+        for(var i = 0; i < inputs.length; i++) {
+            inputs[i].value = '';
+        }
+
+        $('#childTable tbody tr:last').after(clone);
+    }
+    var index = function(x) {
+     console.log("Row index is: " + x.rowIndex);
+     return x.rowIndex;
+    }
 </script>
 <?php
 //Standard call for dependencies
