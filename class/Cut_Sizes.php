@@ -13,7 +13,7 @@ class Cut_Sizes {
         ")){
             while( $row = $result->fetch_assoc() ) {
                 //array_push ($device_mats, array("m_id" => $row["m_id"], "price" => $row["price"], "m_name" => $row["m_name"], "unit" => $row["unit"]));
-                array_push($sheet_sizes, array("cut_id" => $row["cut_id"], "width" => $row["width"], "height" => $row["height"]));
+                array_push($sheet_sizes, array("cut_id" => $row["cut_id"], "width" => $row["width"], "height" => $row["height"], "price" => $row["price"]));
             }
             return $sheet_sizes;
         } else {
