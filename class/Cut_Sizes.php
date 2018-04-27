@@ -2,6 +2,22 @@
 
 class Cut_Sizes {
 
+    public static function addChildren($childrenArray) {
+        global $mysqli;
+       echo "<script>console.log(" . json_encode($childrenArray) . ");</script>";
+        foreach($childrenArray as $key => $cutsize) {
+            // echo "<script>console.log(" . json_encode($childrenArray) . ");</script>";
+            if($cutsize['child1'] != 'NULL') {
+                echo "<script>console.log('" . $key . " " . $cutsize['child1'] . " " . $cutsize['amount1'] ."');</script>";
+                $mysqli->query ("INSERT INTO cutsize_children (parent_id, child_id, amount) VALUES  (".$key.", ".$cutsize['child1'].", ".$cutsize['amount1'].");");
+            } 
+            if($cutsize['child2'] != 'NULL') {
+                echo "<script>console.log('" . $key . " " . $cutsize['child2'] . " " . $cutsize['amount2'] ."');</script>";
+                $mysqli->query ("INSERT INTO cutsize_children (parent_id, child_id, amount) VALUES  (".$key.", ".$cutsize['child2'].", ".$cutsize['amount2'].");");
+            }
+        }
+    }
+
     public static function getSheetSizes($type_id){
         global $mysqli;
         $sheet_sizes = array();

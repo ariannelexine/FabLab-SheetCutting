@@ -19,7 +19,8 @@ if (empty($_GET["type_id"])){
 }
 
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['childBtn'])) {
-     echo "<script>console.log( 'Debug Objects: " . json_encode($_POST['child1']) . "' );</script>";
+   //echo "<script>console.log(" . json_encode($_POST). ");</script>"; 
+    Cut_Sizes::addChildren($_POST['cArray']);
 }
 ?>
 
@@ -49,37 +50,45 @@ if($error){
         <div class="panel panel-default">
             <div class="panel-heading">
                 <i class="fas fa-cubes fa-lg"></i> Add new Sheet Material
+                <button style="margin-top:-7px;" type="button" class="btn btn-info pull-right" data-container="body" data-trigger="hover" data-toggle="popover" 
+                data-placement="left" data-title="Define the child sizes and the number of pieces that a base sheet can be cut into." data-content="
+                <strong>Example</strong>
+                <br />'35x20' is cut into 1 '20x20' and 1 '20x15'
+                <br />'96x48' is cut into 10 '18x24' and 1 '24x12'"> 
+                <span class="glyphicon glyphicon-info-sign"></span> Info </button>
             </div>
             <div class="panel-body">
             <form id="cform" name="cform" method="post" >
                 <table id="childTable" class="table table-striped table-bordered table-hover">
                     <tbody>
-                        <tr> <th style="width: 25%; text-align: center"> Size </th><th style='text-align: center'> Child 1 </th><th style='text-align: center'> Child 2 </th> </tr>
+                        <thead>
+                            <tr>
+                                <th style="width: 25%; text-align: center"> Size </th>
+                                <th style='text-align: center'> Child 1 </th>
+                                <th style='text-align: center'> Child 2 </th>
+                            </tr>
+                        </thead>
                         <?php
-                            foreach($cut_sizes as $size) {
-                                echo "<tr style='text-align: center' name='cutid" . $size[cut_id] . "'>
-                                    <td>" . $size[width] . "x" . $size[height] . "</td>"; ?>
+                            foreach($cut_sizes as $size) { ?>
+                                <tr style='text-align: center'>
+                                <?php echo "<td>" . $size[width] . "x" . $size[height] . "</td>"; ?>
                                     <td>
-                                    <select name="child1[]" id="child1" style="margin-right:20px;">
+                                    <?php echo "<select name='cArray[$size[cut_id]][child1]' style='margin-right:20px;'>"; ?>
                                     <option value='NULL'>No Child</option>
                                         <?php if($result = $mysqli->query("
                                                 SELECT *
                                                 FROM `cut_sizes`
                                                 WHERE `type_id` = $type_id;
                                         ")){ while($row = $result->fetch_assoc()){
-                                                echo("<option value='$row[cut_id]'>$row[width] x $row[height]</option>");
+                                                echo("<option value='$row[cut_id]'>$row[width]x$row[height]</option>");
                                             }
                                         }?>
                                     </select>
                                     <b>Amount:</b>
-                                    <select name="childAmount1[]"> 
-                                    <option disabled hidden selected value=""></option>
-                                        <option value=1> 1 </option>
-                                        <option value=2> 2 </option>
-                                    </select> 
+                                    <?php echo "<input type='number' name='cArray[$size[cut_id]][amount1]' value='' style='width: 60px; margin-right:12px;'/>"; ?>
                                     </td>
                                     <td> 
-                                    <select name="child2[]" id="child2" style="margin-right:20px;">
+                                    <?php echo "<select name='cArray[$size[cut_id]][child2]' style='margin-right:20px;'>"; ?>
                                     <option value='NULL'>No Child</option>
                                         <?php if($result = $mysqli->query("
                                                 SELECT *
@@ -91,11 +100,7 @@ if($error){
                                         }?>
                                     </select>
                                     <b>Amount:</b>
-                                    <select name="childAmount2[]"> 
-                                    <option disabled hidden selected value=""></option>
-                                        <option value=1> 1 </option>
-                                        <option value=2> 2 </option>
-                                    </select> 
+                                    <?php echo "<input type='number' name='cArray[$size[cut_id]][amount2]' value='' style='width: 60px; margin-right:12px;'/>"; ?>
                                     </td>
                                   </tr> 
                         <?php } ?>
@@ -104,8 +109,8 @@ if($error){
                 <tr id="buttons">
                     <td>
                         <button onclick="Cancel();" class="btn btn-danger btn-md pull-right">Cancel</button>
-                        <button onclick="AddChildren()" class="btn btn-success btn-md pull-right" style="margin-right:8px;">Add Cut Size Children</button>
-                        <td align="right"><input type="submit" name="childBtn" value="Submit" tabindex="9"></td>
+                        <!-- <button onclick="AddChildren()" class="btn btn-success btn-md pull-right" style="margin-right:8px;">Add Cut Size Children</button> -->
+                        <input type="submit" name="childBtn" value="Add Cut Size Children" class="btn btn-success btn-md pull-right" style="margin-right:8px;">
                     </td>
                 </tr>
                 </form>
@@ -116,18 +121,11 @@ if($error){
 <?php } ?>
 
 <script type="text/javascript" charset="utf-8">
-    // var AddChildren = function() {
-    //     var table = document.getElementById("childTable");
-    //     for (var i = 0, row; row = table.rows[i]; i++) {
-    //         //iterate through rows
-    //         //rows would be accessed using the "row" variable assigned in the for loop
-    //         for (var j = 0, col; col = row.cells[j]; j++) {
-    //             //iterate through columns
-    //             //columns would be accessed using the "col" variable assigned in the for loop
-    //         }  
-    //     }
-
-    // }
+    window.onload = function() {
+        $(function () {
+            $('[data-toggle="popover"]').popover({ html : true})
+        })
+    }; 
 </script>
 <?php
 //Standard call for dependencies
