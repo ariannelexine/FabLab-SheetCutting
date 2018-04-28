@@ -1,4 +1,5 @@
 <?php
+include('ajax_connectToDatabase.php');
 
 class Sheet_Type {
     private $type_id;

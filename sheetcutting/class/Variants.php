@@ -1,4 +1,5 @@
 <?php
+include('ajax_connectToDatabase.php');
 
 class Variants {
 
