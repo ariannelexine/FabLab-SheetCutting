@@ -1,5 +1,3 @@
-use `fabapp-v0.9`;
-
 CREATE TABLE sheet_type (
   type_id INT PRIMARY KEY AUTO_INCREMENT,
   type VARCHAR(30)
@@ -38,14 +36,9 @@ CREATE TABLE sheet_inventory (
 
 CREATE TABLE sheet_transaction (
   trans_id INT PRIMARY KEY AUTO_INCREMENT,
-  operator INT, 
-  obj_id INT,
   staff_id VARCHAR(10),
   removed_date datetime
 );
 
 ALTER TABLE `acct_charge`
   ADD `sheet_trans_id` INT;
-
-
-

@@ -11,7 +11,7 @@ include_once ($_SERVER['DOCUMENT_ROOT'].'/pages/header.php');
 <div id="page-wrapper">
     <div class="row">
         <div class="col-md-12">
-            <h1 class="page-header">Make a cut</h1>
+            <h1 class="page-header">Make a cut / Sell sheets</h1>
         </div>
         <!-- /.col-md-12 -->
     </div>
@@ -23,6 +23,14 @@ include_once ($_SERVER['DOCUMENT_ROOT'].'/pages/header.php');
                     <i class="fas fa-cubes fa-lg"></i> Sheet cutting
                 </div>
 				<div class="panel-body">
+					<form id="submit_form" method="post" action="webpage_cutSheet_accepted.php">
+						<b>Sell to user: </b>
+						<input id="mav_id" name="mav_id" type="text" placeholder="1000000000" maxlength="10" size="10" autofocus tabindex="1"></input>
+						<input type="hidden" id="cut_list_instructions" name="cut_list_instructions"/>
+						<input type="hidden" id="sell_sheet_info" name="sell_sheet_info"/>
+						<input type="hidden" id="inv_data" name="inv_data"/>
+					</form>
+					<br/>
 					<b>Material: </b>
 					<select id="sheet_type_list" onchange="makeVariantsAndCutSizesSelects()">
 					<?php if ($result = $mysqli->query("
@@ -79,6 +87,18 @@ function createDropDownList(id, str_array, onchange){
 	return list;
 }
 
+function createNumericalSpinnerInput(id, default_value, min, max) {
+	//<input type="number" name="quantity" min="1" max="5">
+	var spinner = document.createElement("input");
+	spinner.type = "number";
+	spinner.min = min;
+	spinner.max = max;
+	spinner.value = default_value;
+	spinner.id = id;
+	spinner.style = "margin-right:4px";
+	return spinner;
+}
+
 function createLabel(label) {
 	var label_elem = document.createElement("b");
 	label_elem.innerHTML = label;
@@ -106,10 +126,13 @@ function makeVariantsAndCutSizesSelects(){
 		var data = JSON.parse(response);
 		var variants = data[0];
 		var cut_sizes = data[1];
+		var amounts = [1];
 		elements_div.appendChild(createLabel("Variant: "));
 		elements_div.appendChild(createDropDownList('name_list', variants, function(){ updateStock(); }));
 		elements_div.appendChild(createLabel("Cut Size: "));
 		elements_div.appendChild(createDropDownList('size_list', cut_sizes, function(){ updateStock(); }));
+		elements_div.appendChild(createLabel("Amount: "));
+		elements_div.appendChild(createNumericalSpinnerInput('amount_spinner', 1, 1, 1));
 		elements_div.appendChild(document.createElement("br")); // new line
 		
 		var stock_and_price = document.createElement("div");
@@ -122,14 +145,24 @@ function makeVariantsAndCutSizesSelects(){
 	//makeSheetSellingElements();
 }
 
-function makeAssociatedArrayWithStockData(data){
+function makeAssociatedArrayWithStockData(data, sheet_type, variant_name, variant_id){
 	var dictionary = {};
 	var stock = data[0];
 	var price_and_cutid = data[1];
 	
 	for(var i = 0; i < price_and_cutid.length; i++) {
 		var size = price_and_cutid[i][0] + "x" + price_and_cutid[i][1];
-		dictionary[size] = { cut_id : price_and_cutid[i][2], size: size, price : price_and_cutid[i][3], stock : 0 };
+		dictionary[size] = { 
+			cut_id : price_and_cutid[i][2], 
+			size: size, 
+			width: price_and_cutid[i][0], 
+			height: price_and_cutid[i][1], 
+			price : price_and_cutid[i][3], 
+			stock : 0, 
+			sheet_type : sheet_type,
+			variant_name : variant_name,
+			variant_id : variant_id
+		};
 	}
 	
 	for(var i = 0; i < stock.length; i++) {
@@ -171,8 +204,9 @@ function updateStock() {
 	//console.log(params);
 	callPHP('ajax_getInventoryStock.php', params, function(response){
 		//console.log(response);
+		var name_id = name.value.substring(name.value.indexOf(" (")+2, name.value.indexOf(")"));
 		var data = JSON.parse(response);
-		var inv_data = makeAssociatedArrayWithStockData(data);
+		var inv_data = makeAssociatedArrayWithStockData(data, sheet_type.value, name_string, name_id);
 		updateInventoryPanel(inv_data);
 		
 		
@@ -199,33 +233,67 @@ function makeSaleButton(inv_data, size) {
 	var buyButton = document.createElement("button");
 	buyButton.style = "margin-left:8px;";
 	if(inv_data[size].stock > 0) {
+		var instructions = document.getElementById('cut_list_instructions');
+		instructions.value = ''; // Clear cut instructions if it already has some.
+		var sheet_info = document.getElementById('sell_sheet_info');
+		
+		var sheet_type = document.getElementById('sheet_type_list').value;
+		var variant_name = document.getElementById('name_list').value;
+		
+		document.getElementById('amount_spinner').max = inv_data[size].stock;
+		
 		var info = document.createElement("div");
 		info.style = "padding-top:10px";
 		buyButton.className = "btn btn-success btn-md";
 		buyButton.innerHTML = "Sell sheet";
-		buyButton.onclick = function() { alert("SOLD!"); }
+		buyButton.onclick = function() { 
+			var amount = document.getElementById('amount_spinner').value;
+		
+			// Pass sheet info to webpage_cutSheet_accepted
+			sheet_info.value = inv_data[size].sheet_type + ";" + inv_data[size].variant_name + ";" + inv_data[size].variant_id + ";" + inv_data[size].stock + ";" + inv_data[size].width + ";" + inv_data[size].height + ";" + inv_data[size].price + ";" + amount;
+			trySubmitForm();
+		}
 		info.appendChild(buyButton);
 		button_for_buy.appendChild(info);
 	} else {
-		//buyButton.className = "btn btn-info btn-md";
-		//buyButton.innerHTML = "See Cuts";
-		//buyButton.onclick = function() {
-			var sheet_type = document.getElementById('sheet_type_list');
-			var name = document.getElementById('name_list');
-			var name_string = name.value.substring(0, name.value.indexOf(" ("));
-			var name_id = name.value.substring(name.value.indexOf(" (")+2, name.value.indexOf(" (")+6);
-			//console.log(name_id + "," + name_string);
-			var width_height = size.split("x");
-			var params = "name="+name_string+"&variant_id="+name_id+
-			"&sheet_type="+sheet_type.value+"&width="+width_height[0]+"&height="+width_height[1]+
-			"&count="+inv_data[size].stock+"&price="+inv_data[size].price+"&cut_id="+inv_data[size].cut_id;
-			//console.log(params);
-			callPHP('ajax_getCuts.php', params, function(response){
-				showCutTreeResults(response, inv_data, size);
-			});
+		// The amount sold by using cuts is currently hardcoded at 1.
+		document.getElementById('amount_spinner').max = 1;
+		document.getElementById('amount_spinner').value = 1;
+		
+		var sheet_type = document.getElementById('sheet_type_list');
+		var name = document.getElementById('name_list');
+		var amount = document.getElementById('amount_spinner').value;
+		var name_string = name.value.substring(0, name.value.indexOf(" ("));
+		var name_id = name.value.substring(name.value.indexOf(" (")+2, name.value.indexOf(" (")+6);
+		//console.log(name_id + "," + name_string);
+		var width_height = size.split("x");
+		var params = "name="+name_string+"&variant_id="+name_id+
+		"&sheet_type="+sheet_type.value+"&width="+width_height[0]+"&height="+width_height[1]+
+		"&count="+inv_data[size].stock+"&price="+inv_data[size].price+"&cut_id="+inv_data[size].cut_id
+		+"&amount="+amount;
+		console.log(params);
+		callPHP('ajax_getCuts.php', params, function(response){
+			showCutTreeResults(response, inv_data, size);
+		});
 		//}
 	}
 	
+}
+
+function trySubmitForm() {
+	var mav_id = document.getElementById('mav_id').value;
+	var mav_id_checks = 
+		mav_id != undefined && // check to see if mav_id is defined
+		mav_id !== "" && // check to see if mav_id is not empty
+		mav_id.substr(0, 3) === "100" && // check to see if first three digits of mav_id is "100"
+		mav_id.length == 10 && // check to see if mav_id length is 10 digits
+		mav_id.match(/^[0-9]+$/) != null; // check to see if mav_id only contains the digits 0-9.
+		
+	if(mav_id_checks) {
+		document.getElementById('submit_form').submit();
+	} else {
+		alert("You need to enter a valid Mav ID");
+	}
 }
 
 function getInventoryByCutId(inv_data, id){
@@ -273,11 +341,10 @@ function showCutTreeResults(response, inv_data, size) {
 	confirm.innerHTML = "Confirm Cut(s)";
 	
 	confirm.onclick = function() {
-		window.location.href = "webpage_cutSheet_accepted.php";
+		trySubmitForm();
 	}
 	
 	cut_info.appendChild(confirm);
-	
 	
 	cut_info.appendChild(document.createElement("br"));
 	cut_info.appendChild(document.createElement("hr"));
@@ -292,6 +359,10 @@ function showCutTreeResults(response, inv_data, size) {
 	
 	table_header.innerHTML = "<td>Make the following cuts:</td>";
 	
+	var instructions = document.getElementById('cut_list_instructions');
+	instructions.value = ''; // Clear instructions if it already has some.
+	
+	document.getElementById('inv_data').value = JSON.stringify(inv_data); // pass inv_data to PHP.
 	
 	for(var i = list.length-1; i >= 0; i--){
 		var current_sheet_size = list[i].width + "x" + list[i].height;
@@ -302,22 +373,35 @@ function showCutTreeResults(response, inv_data, size) {
 		var cut_amounts = cut_into[i].length;
 		if(cut_amounts > 0) {
 			var message = "Cut a " + current_sheet_size + " sheet into ";
-			
 			if(cut_amounts == 1) {
 				var cut_amount = cut_into[i][0][1];
 				var child_sheet = getInventoryByCutId(inv_data, cut_into[i][0][0]);
-				message += "2 " + child_sheet.size + " sheets";
+				message += cut_amount + " " + child_sheet.size + " sheet";
+				if(cut_amount > 1)
+					message += "s";
 			} else { 
 				var child_sheet_1 = getInventoryByCutId(inv_data, cut_into[i][0][0]);
 				var child_sheet_2 = getInventoryByCutId(inv_data, cut_into[i][1][0]);
+				var child_1_cut_amount = cut_into[i][0][1];
+				var child_2_cut_amount = cut_into[i][1][1];
+				
 				if(child_sheet_1 != undefined && child_sheet_2 != undefined) {
-					message += "a " + child_sheet_1.size + " sheet and a " + child_sheet_2.size + " sheet";
+					message += child_1_cut_amount + " " + child_sheet_1.size + " sheet";
+					if(child_1_cut_amount > 1)
+						message += "s";
+					message += " and " + child_2_cut_amount + " " + child_sheet_2.size + " sheet";
+					if(child_2_cut_amount > 1)
+						message += "s";
 				} else {
 					console.log(child_sheet_1 + "/" + child_sheet_2);
 				}
 			}
 			
 			tbody.innerHTML += "<tr><td>" + message + "</tr></td>";
+			
+			instructions.value += message;
+			if(i > 1)
+				instructions.value += ';';
 			//console.log(message);
 		}
 		//console.log(list[i].width + "," + list[i].height + ": " + cut_into[i]);
@@ -325,9 +409,6 @@ function showCutTreeResults(response, inv_data, size) {
 	elements_div.appendChild(cut_info);
 }
 
-
-
-// I'm not sure how jon wants us to call php functions
 function callPHP(url, params, callback_function) {
     var post = new XMLHttpRequest();
     post.open("POST", url);

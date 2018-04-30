@@ -17,7 +17,7 @@ if ( $staff && isset($_SESSION['ticket']) ){
     } else {
         $user = $ticket->getUser();
     }
-
+	
     if ( isset($_SESSION['pre_select']) ){
         $pre_select = $_SESSION['pre_select'];
         unset($_SESSION['pre_select']);
@@ -27,7 +27,7 @@ if ( $staff && isset($_SESSION['ticket']) ){
 } else {
     echo "<script> console.log('Pay.php : No Ticket to be found'); </script>";
     //Not logged In
-    header("location: /index.php");
+    //header("location: /index.php");
 }
 if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['payBtn']) && $errorMsg == ""){
     $selectPay = filter_input(INPUT_POST, "selectPay");

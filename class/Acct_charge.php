@@ -185,6 +185,82 @@ class Acct_charge {
         }
         return false;
     }
+	
+	/*
+	Addition by David Benepe for selling glass sheets
+	*/
+	public static function insertPOS($amount, $order_num, $selectPay, $payee, $staff){
+        global $mysqli;
+        //$trans_id = $ticket->getTrans_id();
+        //$amount = $ticket->quote();
+        
+        if ($amount < .005){
+            return "No Balance Due: ".$amount;
+        }
+        
+        if ($a_id == 1) {
+            $acct = new Accounts(1);
+            $acct->updateBalance($amount);
+            $ac_notes = "'Debit Charge'";
+        } else {
+            $ac_owed = Acct_charge::checkOutstanding($payee->getOperator());
+            //if ticket has a related acct charge to a_id == 1
+            if (isset($ac_owed[$order_num])){
+                echo "isset $order_num";
+                //invert the amount owed and reduce the account balance
+                $acct = new Accounts(1);
+                $acct->updateBalance(-1.0 * $amount);
+                if ($mysqli->query("
+                    INSERT INTO `acct_charge` 
+                        (`a_id`, `trans_id`, `ac_date`, `operator`, `staff_id`, `amount`, `ac_notes`) 
+                    VALUES
+                        ('1', '$trans_id', CURRENT_TIME(), '".$payee->getOperator()."','".$staff->getOperator()."', '".-1.0 * $amount."', \"Credit Charge\");
+                ")){
+                    
+                } else {
+                    return $mysqli->error;
+                }
+            }
+            
+            //insert AC to credit AR
+            $ac_notes = "NULL";
+        }
+        
+        /*  use prepared statements
+        if ($stmt = $mysqli->prepare("
+            INSERT INTO `acct_charge` 
+                (`a_id`, `trans_id`, `ac_date`, `operator`, `staff_id`, `amount`, `ac_notes`)
+            VALUES
+                (?, ?, CURRENT_TIME(), ?, ?, ?, ?);
+        ")){
+            $stmt->bind_param("iiiis", $a_id, $trans_id, $payee->getOperator(), $staff->getOperator(), $amount, $ac_notes);
+        }
+         */
+        if ($mysqli->query("
+            INSERT INTO `acct_charge` 
+                (`a_id`, `trans_id`, `ac_date`, `operator`, `staff_id`, `amount`, `ac_notes`) 
+            VALUES
+                ('$a_id', '$trans_id', CURRENT_TIME(), '".$payee->getOperator()."','".$staff->getOperator()."', '$amount', $ac_notes);
+        ")){
+            $ac_id = $mysqli->insert_id;
+            
+            //Update Account's Balance
+            $acct = new Accounts($a_id);
+            $acct->updateBalance($amount);
+            
+            //If all everything is good, Write all attributes of the ticket to the DB
+			/*
+            if ($ticket->writeAttr()){
+                return $ac_id;
+            } else {
+                return "AC163 - Error Writing Ticket ";
+            }
+			*/
+        } else {
+            return $mysqli->error;
+        }
+        return false;
+    }
 
     public function getAc_id() {
         return $this->ac_id;

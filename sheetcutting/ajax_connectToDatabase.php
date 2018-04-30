@@ -17,6 +17,8 @@ if ($connection->connect_error) {
 	exit('Connection failed: ' . $connection->connect_error);
 }
 
+
 $mysqli = new mysqli('localhost', 'Fablabian', 'sbVaBEd3eW9dxmdb', 'fabapp-v0.9') or die(mysql_error());
+//$mysqli = new mysqli('localhost', 'root', '', 'fabapp-v0.9') or die(mysql_error());
 
 ?>
