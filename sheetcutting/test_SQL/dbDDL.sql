@@ -33,10 +33,18 @@ CREATE TABLE sheet_inventory (
   obj_id INT PRIMARY KEY AUTO_INCREMENT,
   trans_id INT,
   variant_id INT,
-  cut_id INT,
+  cut_id INT
+);
+
+CREATE TABLE sheet_transaction (
+  trans_id INT PRIMARY KEY AUTO_INCREMENT,
+  obj_id INT,
   staff_id VARCHAR(10),
   removed_date datetime
 );
+
+ALTER TABLE `acct_charge`
+  ADD `sheet_trans_id` INT;
 
 
 
