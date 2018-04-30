@@ -5,6 +5,8 @@
  */
  //This will import all of the CSS and HTML code nessary to build the basic page
 include_once ($_SERVER['DOCUMENT_ROOT'].'/pages/header.php');
+include_once ($_SERVER['DOCUMENT_ROOT'].'/sheetcutting/class/all_classes.php');
+
 $time = $errorMsg = "";
 $error = false;
 
@@ -72,7 +74,7 @@ if($error){
                         <tr style='text-align: center' id='childRow'>
                         <td>
                         <?php echo "<select class='parentSelect' name='cArray[0][parent]' style='margin-right:20px;'>"; ?>
-                            <option selected value='NULL'>Sheet</option>
+                        <option disabled hidden selected value="">Sheet</option>
                                 <?php if($result = $mysqli->query("
                                         SELECT *
                                         FROM `cut_sizes`
