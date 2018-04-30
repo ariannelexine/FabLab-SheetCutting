@@ -7,7 +7,7 @@ FROM sheet_type s
 LEFT JOIN variants as v ON s.type_id = v.type_id
 LEFT JOIN sheet_inventory as i ON i.variant_id = v.variant_id
 LEFT JOIN cut_sizes as c ON i.cut_id = c.cut_id
-WHERE i.removed_date IS NULL AND s.type = '".$_POST["sheet_type"]."' AND v.name = '".$_POST["variant_name"]."'
+WHERE i.trans_id IS NULL AND s.type = '".$_POST["sheet_type"]."' AND v.name = '".$_POST["variant_name"]."'
 GROUP BY width, height
 ";
 

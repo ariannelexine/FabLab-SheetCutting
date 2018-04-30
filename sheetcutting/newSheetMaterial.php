@@ -41,18 +41,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 							<tr id="materialName">
 								<td>
 									<b>Material Name:</b> 
-									<input style="margin-left:4px;" value="" name="sheetType" id="sheetType" tabindex="1" />
+									<input style="margin-left:4px;" value="" name="sheetType" id="sheetType" tabindex="1" required/>
 								</td>
 							</tr>
 						</tbody>
 					</table>
                     <table class="table table-striped table-bordered table-hover" id="variantTable">
 						<tbody>
-							<tr>
+							<thead>
 								<th>
 									<b>Variants</b>
 								</th>
-							</tr>
+							</thead>
                             <div id="hidden_form_container" style="display:none;"></div>
                             <tr id="addVariant">
 								<td>
@@ -60,6 +60,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 									<button onclick="AddColorVariant()" class="btn btn-warning btn-md" style="margin-left:8px;">Add Color Variant</button>
 								</td>
 							</tr>
+							<thead>
+								<th>
+									<b>Cut Sizes</b>
+								</th>
+							</thead>
                             <tr id="addSize">
 								<td>
 									<button onclick="AddSize()" class="btn btn-info btn-md">Add Cut Sizes</button>
