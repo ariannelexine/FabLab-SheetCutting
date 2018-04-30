@@ -38,6 +38,7 @@ CREATE TABLE sheet_inventory (
 
 CREATE TABLE sheet_transaction (
   trans_id INT PRIMARY KEY AUTO_INCREMENT,
+  operator INT, 
   obj_id INT,
   staff_id VARCHAR(10),
   removed_date datetime

@@ -23,6 +23,7 @@ if (empty($_GET["type_id"])){
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['childBtn'])) {
    //echo "<script>console.log(" . json_encode($_POST). ");</script>"; 
     Cut_Sizes::addChildren($_POST['cArray']);
+    header("Location:webpage_inventory.php");
 }
 ?>
 
@@ -119,8 +120,8 @@ if($error){
                 <tr id="buttons">
                     <td>
                         <button onclick="Cancel();" class="btn btn-danger btn-md pull-right">Cancel</button>
-                        <!-- <button onclick="AddChildren()" class="btn btn-success btn-md pull-right" style="margin-right:8px;">Add Cut Size Children</button> -->
-                        <input type="submit" name="childBtn" value="Save" class="btn btn-success btn-md pull-right" style="margin-right:8px;">
+                        <button type="submit" name="childBtn" style="margin-right:8px;" class="btn btn-success btn-md pull-right"><span class="glyphicon glyphicon-ok"></span> Save</button>
+
                     </td>
                 </tr>
                 </form>

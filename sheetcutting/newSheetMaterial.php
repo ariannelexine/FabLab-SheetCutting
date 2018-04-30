@@ -73,7 +73,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             <tr id="buttons">
 								<td>
 									<button onclick="Cancel();" class="btn btn-danger btn-md pull-right">Cancel</button>
-									<button id="submitBtn" onclick="SubmitMaterial()" class="btn btn-success btn-md pull-right" style="margin-right:8px;">Add Material</button>
+									<button id="submitBtn" onclick="SubmitMaterial()" class="btn btn-success btn-md pull-right" style="margin-right:8px;">Save </button>
 								</td>
 							</tr>
                         </tbody>
@@ -409,7 +409,11 @@ var SubmitMaterial = function() {
 
   document.getElementById('hidden_form_container').appendChild(theForm);
   
-  theForm.submit();
+  if (confirm('Insert ' + matName.value + ' into the database?')) {
+	theForm.submit();
+	} else {
+		// Do nothing!
+	}
 }
 </script>
 <?php
