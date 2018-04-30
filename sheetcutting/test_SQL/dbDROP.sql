@@ -10,3 +10,4 @@ DROP TABLE IF EXISTS sheet_type;
 DROP TABLE IF EXISTS variants;
 DROP TABLE IF EXISTS cut_sizes;
 DROP TABLE IF EXISTS cutsize_children;
+DROP TABLE IF EXISTS sheet_transaction;

@@ -130,7 +130,8 @@ echo "</div>";
                                         <td align="center"> - </td>
                                         <?php if($row["url"] && $staff){
                                             if ($staff->getRoleID() > 6){?>
-                                                <td  align="center"><?php echo ("<a href=\"http://".$row["url"]."\">New Ticket</a>"); ?></td>
+                                                <!--><td  align="center"><?php //echo ("<a href=\"http://".$row["url"]."\">New Ticket</a>"); ?></td>-->
+												<td align="center"><div id="est"><a href="\pages\create.php?<?php echo("d_id=".$row["d_id"])?>">New Ticket</a></div></td>
                                             <?php } else
                                                 echo("<td align=\"center\">-</td>");
                                         } elseif($staff) {

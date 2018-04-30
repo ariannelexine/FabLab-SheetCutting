@@ -20,9 +20,6 @@ include_once ($_SERVER['DOCUMENT_ROOT'].'/pages/header.php');
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <i class="fas fa-cubes fa-lg"></i> Inventory
-				<a type="button" style="margin-top:-7px;margin-right:-12px;" class="btn btn-info btn-md pull-right" href="http://fabapp/sheetcutting/webpage_addNewInventory.php"> 
-				<span class="glyphicon glyphicon-plus-sign"></span> Add New Inventory
-				</a>
                 </div>
 				<div class="panel-body">
 					<table class="table table-striped table-bordered table-hover" id="testTable">
@@ -41,7 +38,7 @@ include_once ($_SERVER['DOCUMENT_ROOT'].'/pages/header.php');
 							LEFT JOIN cut_sizes as c ON s.type_id = c.type_id
 							LEFT JOIN variants as v ON s.type_id = v.type_id
 							LEFT JOIN sheet_inventory as i ON i.variant_id = v.variant_id AND i.cut_id = c.cut_id
-							WHERE i.removed_date IS NULL
+							WHERE i.trans_id IS NULL
 							GROUP BY name, width, height;
                         ")){
                             while ( $row = $result->fetch_assoc() ){ ?>

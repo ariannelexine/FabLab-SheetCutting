@@ -18,7 +18,7 @@ function find_parents(&$sheet, $connection) {
 					LEFT JOIN cut_sizes as c ON s.type_id = c.type_id
 					LEFT JOIN variants as v ON s.type_id = v.type_id
 					LEFT JOIN sheet_inventory as i ON i.variant_id = v.variant_id AND i.cut_id = c.cut_id
-					WHERE i.removed_date IS NULL AND v.variant_id = '" . $sheet->id . "' AND c.cut_id IN 
+					WHERE i.trans_id IS NULL AND v.variant_id = '" . $sheet->id . "' AND c.cut_id IN 
 					(SELECT parent_id FROM cutsize_children WHERE child_id = " . $row['cut_id'] . ")
 					GROUP BY name, width, height";
 			if ($result2 = $connection->query($sql2)) {
