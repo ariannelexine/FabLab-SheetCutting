@@ -5,7 +5,6 @@
  */
  //This will import all of the CSS and HTML code nessary to build the basic page
 include_once ($_SERVER['DOCUMENT_ROOT'].'/pages/header.php');
-include_once ($_SERVER['DOCUMENT_ROOT'].'/sheetcutting/class/all_classes.php');
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
    echo "<script>console.log( 'Debug Objects: " . $_POST["matName"] . "' );</script>";
@@ -91,16 +90,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 	var colorvariant_id_reference = [];
 	var variant_id_reference = [];
 	var size_id_reference = [];
-
-	window.onload = function(){
-		document.getElementById("submitBtn").disabled = true;
-		$('#sheetType').keyup(function(){
-			if($(this).val().length !=0)
-				document.getElementById("submitBtn").disabled = false;
-			else
-				document.getElementById("submitBtn").disabled = true;
-		})
-	};
 	
 	var AddColorVariant = function() {
 		var tableRow = document.createElement("tr");

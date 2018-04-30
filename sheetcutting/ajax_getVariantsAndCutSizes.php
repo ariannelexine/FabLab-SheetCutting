@@ -19,9 +19,10 @@ $sql = "SELECT name, variant_id, color_id from Variants v INNER JOIN sheet_type 
 if ($result = $connection->query($sql)) {
 	while ($row = $result->fetch_assoc() ){
 		$entry = $row["name"];
-		if($row["color_id"] != NULL) {
-			$entry .= ' (' . $row["color_id"] . ')';
-		} else if($row["variant_id"] != NULL) {
+		//if($row["color_id"] != NULL) {
+		//	$entry .= ' (' . $row["color_id"] . ')';
+		//} else 
+		if($row["variant_id"] != NULL) {
 			$entry .= ' (' . $row["variant_id"] . ')';
 		}
 		array_push($variants, $entry);

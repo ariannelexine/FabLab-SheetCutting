@@ -81,7 +81,7 @@ function createDropDownList(id, str_array, onchange){
 	for(var i = 0; i < str_array.length; i++) {
 		var option = document.createElement("option");
 		option.value = str_array[i];
-		option.innerHTML = str_array[i];
+		option.innerHTML = str_array[i].replace(/\s*\(.*?\)\s*/g, '');
 		list.appendChild(option);
 	}
 	return list;
@@ -306,7 +306,6 @@ function getInventoryByCutId(inv_data, id){
 
 function showCutTreeResults(response, inv_data, size) {
 	var data;
-	
 	try {
 		//console.log(response);
         data = JSON.parse(response);
