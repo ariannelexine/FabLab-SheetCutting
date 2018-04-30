@@ -41,13 +41,15 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['payBtn'])){
 		//echo '<b>Error: Mav ID is not set</b>';
 		$errorMsg = "Error: Mav ID is not set";
 	}
-	if(!isset($_SESSION['Cuts'])) {
-		//echo '<b>Error: Cut list is not set</b>';
-		$errorMsg = "Error: Cut list is not set";
-	}
 	
 	if(isset($_POST['cut_list_instructions'])) {
 		if(strlen($_POST['cut_list_instructions']) > 0){
+			
+			if(!isset($_SESSION['Cuts'])) {
+				//echo '<b>Error: Cut list is not set</b>';
+				$errorMsg = "Error: Cut list is not set";
+			}
+			
 			$_SESSION['cut_list_instructions'] = $_POST['cut_list_instructions']; // save cut instructions to session.
 			$_SESSION['inv_data'] = $_POST['inv_data']; // save inventory data to session.
 			$_SESSION['staff_id'] = $staff->getOperator(); // store staff id to session (to pass into ajax_updateDatabaseWithCuts.php)

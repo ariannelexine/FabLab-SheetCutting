@@ -69,7 +69,7 @@ $has_cut_instructions = isset($_SESSION['cut_list_instructions']);
 							echo ($sell_amount > 1 ? 'sheets ' : 'sheet ');
 							echo 'for $' . $total_cost;
 							echo '</b></td></tbody></table>';
-							echo '<button style="width:100%" class="btn btn-success btn-md">The user has picked up the sheets, please update the database</button>';
+							echo '<button style="width:100%" class="btn btn-success btn-md" onclick="updateDatabaseWithSoldSheets()">The user has picked up the sheets, please update the database</button>';
 						}
 					?>
 				</div>
@@ -80,8 +80,13 @@ $has_cut_instructions = isset($_SESSION['cut_list_instructions']);
 <script type="text/javascript" charset="utf-8">
 function updateDatabaseWithCuts(){
 	callPHP('ajax_updateDatabaseWithCuts.php', "", function(response){
-		console.log(response);
+		window.location.href = 'webpage_inventory.php';
 	});
+}
+
+function updateDatabaseWithSoldSheets() {
+	// Selling sheets is unimplemented, should be easy to add in.
+	window.location.href = 'webpage_inventory.php';
 }
 
 function callPHP(url, params, callback_function) {
